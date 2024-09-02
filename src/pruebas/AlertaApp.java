@@ -61,7 +61,7 @@ public class AlertaApp {
         // Crear las vistas
         JPanel menuPanel = createMenuPanel(mainPanel);
         JPanel programadorPanel = createProgramadorPanel(mainPanel);
-        alertasPanel = createAlertasPanel(mainPanel);
+        JPanel alertasPanel = createAlertasPanel(mainPanel);
 
         // Agregar las vistas al panel principal
         mainPanel.add(menuPanel, "Menu");
@@ -192,7 +192,11 @@ public class AlertaApp {
         alertasPanel = new JPanel();
         alertasPanel.setLayout(new BoxLayout(alertasPanel, BoxLayout.Y_AXIS));
 
+        // Coloca el panel de alertas dentro de un JScrollPane
         JScrollPane scrollPane = new JScrollPane(alertasPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         panel.add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
@@ -238,6 +242,8 @@ public class AlertaApp {
                 alertasPanel.add(contratoPanel);
             }
         }
+        
+        // Forzar actualización de la interfaz
         alertasPanel.revalidate();
         alertasPanel.repaint();
     }
