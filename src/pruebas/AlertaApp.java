@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import com.formdev.flatlaf.FlatLightLaf; // Importa el tema FlatLaf
 
 public class AlertaApp {
 
@@ -35,6 +36,13 @@ public class AlertaApp {
     }
 
     public static void main(String[] args) {
+        // Establecer el tema FlatLaf antes de inicializar la interfaz
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
+
         SwingUtilities.invokeLater(AlertaApp::mostrarMenuPrincipal);
     }
 
