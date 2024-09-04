@@ -137,26 +137,26 @@ public class AlertaApp {
                 int intervalMonths = Integer.parseInt(intervalInput.getText());
                 Date startDate = (Date) startDateSpinner.getValue();
                 Date endDate = (Date) endDateSpinner.getValue();
-
+        
                 // Validaciones
                 if (!validarFechas(startDate, endDate)) {
                     return;
                 }
-
+        
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(startDate);
-
+        
                 ArrayList<Alerta> alertasContrato = new ArrayList<>();
-
+        
                 while (calendar.getTime().before(endDate)) {
                     calendar.add(Calendar.MONTH, intervalMonths);
                     Date alertTime = calendar.getTime();
+        
                     if (alertTime.before(endDate)) {
                         TimerTask tarea = new TimerTask() {
                             @Override
                             public void run() {
-                                mostrarNotificacion("Recordatorio de Contrato", "Recordatorio de Contrato: " + nombreContrato + " (Tiempo restante hasta el término del contrato: " + calcularTiempoRestante(endDate));
-                            
+                                mostrarNotificacion("Alerta de Contrato: "+nombreContrato, "Tiempo restante: " + calcularTiempoRestante(endDate));
                             }
                         };
                         Alerta alerta = new Alerta(nombreContrato, endDate, tarea);
@@ -164,9 +164,34 @@ public class AlertaApp {
                         timer.schedule(tarea, alertTime);
                     }
                 }
-
+        
+                // Alertas semanales durante el último mes
+                long diasRestantes = (endDate.getTime() - calendar.getTime().getTime()) / (1000 * 60 * 60 * 24);
+        
+                if (diasRestantes <= 30) {
+                    calendar.setTime(endDate);
+                    calendar.add(Calendar.DAY_OF_MONTH, -30); // Establece la fecha de inicio de alertas semanales
+        
+                    while (calendar.getTime().before(endDate)) {
+                        calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                        Date alertTime = calendar.getTime();
+        
+                        if (alertTime.before(endDate)) {
+                            TimerTask tareaSemanal = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    mostrarNotificacion("Alerta Semanal de Contrato: "+nombreContrato, "¡Queda menos de un mes! Tiempo restante: " + calcularTiempoRestante(endDate));
+                                }
+                            };
+                            Alerta alertaSemanal = new Alerta(nombreContrato, endDate, tareaSemanal);
+                            alertasContrato.add(alertaSemanal);
+                            timer.schedule(tareaSemanal, alertTime);
+                        }
+                    }
+                }
+        
                 alertasPorContrato.put(nombreContrato, alertasContrato);
-
+        
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(mainFrame, "Por favor ingrese un intervalo válido en meses.");
             } catch (Exception ex) {
