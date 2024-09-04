@@ -201,7 +201,7 @@ public class AlertaApp {
         // Acción para detener las alertas
         stopButton.addActionListener(e -> {
             detenerEjecucion(); // Detener alertas
-            JOptionPane.showMessageDialog(mainFrame, "Las alertas han sido detenidas.");
+            JOptionPane.showMessageDialog(mainFrame, "Las alertas han sido eliminadas.");
         });
 
         // Acción para regresar al menú principal
