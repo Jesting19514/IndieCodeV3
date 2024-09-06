@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import com.formdev.flatlaf.FlatLightLaf; // Importa el tema FlatLaf
+import com.formdev.flatlaf.intellijthemes.FlatCyanLightIJTheme;
 public class AlertaApp {
 
     private static Timer timer = new Timer();
@@ -31,7 +31,7 @@ public class AlertaApp {
     public static void main(String[] args) {
         // Establecer el tema FlatLaf antes de inicializar la interfaz
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
+            UIManager.setLookAndFeel(new FlatCyanLightIJTheme());
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }
@@ -45,7 +45,7 @@ public class AlertaApp {
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Deshabilitar el cierre por defecto
         mainFrame.setSize(600, 400);
         mainFrame.setLocationRelativeTo(null); // Centra la ventana en la pantalla
-
+    
         // Añadir el WindowListener para manejar el cierre de la ventana
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -54,24 +54,30 @@ public class AlertaApp {
                 System.exit(0); // Salir del programa
             }
         });
-
+    
         // Crear el panel principal con CardLayout
         JPanel mainPanel = new JPanel(new CardLayout());
         mainFrame.add(mainPanel);
-
+    
         // Crear las vistas
         JPanel menuPanel = createMenuPanel(mainPanel);
         JPanel programadorPanel = createProgramadorPanel(mainPanel);
         JPanel alertasPanel = createAlertasPanel(mainPanel);
-
+    
+        // Establecer el fondo blanco para los paneles
+        // menuPanel.setBackground(Color.WHITE);
+        // programadorPanel.setBackground(Color.WHITE);
+        // alertasPanel.setBackground(Color.WHITE);
+    
         // Agregar las vistas al panel principal
         mainPanel.add(menuPanel, "Menu");
         mainPanel.add(programadorPanel, "Programador");
         mainPanel.add(alertasPanel, "Alertas");
-
+    
         // Mostrar la ventana principal
         mainFrame.setVisible(true);
     }
+    
 
     private static JPanel createMenuPanel(JPanel mainPanel) {
         JPanel menuPanel = new JPanel();
