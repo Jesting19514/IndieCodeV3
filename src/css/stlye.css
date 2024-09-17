@@ -48,6 +48,8 @@ body {
     margin-bottom: 1.5em;
 }
 .add-button {
+    font-family: 'Quicksand', sans-serif;
+    text-shadow: 1px 1px 10px black;
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -66,6 +68,8 @@ body {
 }
 
 .report-button {
+    font-family: 'Quicksand', sans-serif;
+    text-shadow: 1px 1px 10px black;
     position: fixed;
     bottom: 20px;
     left: 23em;
@@ -92,7 +96,7 @@ body {
 }
 
 .delete-button {
-    background-color: #e74d3c77;
+    background-color: #e74d3c3a;
     color: white;
 }
 
@@ -122,6 +126,7 @@ body {
     text-align: left;
     transition: background-color 0.3s ease;
     flex: 1;
+    
     
 }
 
