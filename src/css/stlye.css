@@ -35,6 +35,7 @@ body {
 }
 
 #daycare-list {
+    max-height: 93%;
     overflow-y: auto;
     border: none; 
     margin: 0px 0;
@@ -104,7 +105,7 @@ body {
     text-align: left;
     transition: background-color 0.3s ease;
     flex: 1;
-    margin-bottom: 0.8%;
+    margin-bottom: 0.8em;
 }
 
 .daycare-item:hover {
