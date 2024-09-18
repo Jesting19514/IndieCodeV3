@@ -25,8 +25,14 @@ function addDaycare() {
 
 
 function deleteDaycare(button) {
-    if (confirm("¿Está seguro de que desea eliminar esta guardería?")) {
-        var daycareItem = button.parentElement;
-        daycareItem.remove();
+    if (confirm("Estás a punto de eliminar una guardería, ¿Deseas continuar?")) {
+        var userInput = prompt("Para confirmar la eliminación, escribe 'DELETE'");
+        
+        if (userInput === "DELETE") {
+            var daycareItem = button.parentElement;
+            daycareItem.remove();
+        } else {
+            alert("El texto ingresado no es correcto. La eliminación ha sido cancelada.");
+        }
     }
 }
