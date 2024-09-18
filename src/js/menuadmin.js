@@ -13,7 +13,7 @@ function addDaycare() {
         var newDaycare = document.createElement('div');
         newDaycare.className = 'daycare-item-container';
         newDaycare.innerHTML = `
-            <button class="daycare-item" onclick="location.href='daycare-details.php'">${daycareName}</button>
+            <button class="daycare-item" onclick="location.href='prueba.html'">${daycareName}</button>
             <button class="edit-button" onclick="editName(this)"><img src="../../assets/images/editIcon_1.png" class="icon"></button>
             <button class="delete-button" onclick="deleteDaycare(this)"><img src="../../assets/images/deleteIcon2.png" class="icon"></button>
         `;
