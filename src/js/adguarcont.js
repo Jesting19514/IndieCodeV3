@@ -13,69 +13,72 @@ let currentButton = null;
 
         
         
-        function formatDate(dateString) {
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', options); // Formato en español
+        // Función para formatear la fecha en formato "día, mes, año"
+function formatDate(dateString) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', options); // Formato en español
+}
+
+function saveDates() {
+    const startDateInput = document.getElementById("start-date").value;
+    const endDateInput = document.getElementById("end-date").value;
+    const today = new Date().toISOString().split('T')[0]; // Fecha de hoy en formato ISO
+
+    const startDate = new Date(startDateInput);
+    const endDate = new Date(endDateInput);
+
+    // Validación de fechas
+    if (!startDateInput || !endDateInput) {
+        alert("Por favor, seleccione ambas fechas.");
+        return;
+    }
+
+    if (startDateInput < today) {
+        alert("La fecha de inicio no puede ser una fecha pasada.");
+        return;
+    }
+
+    if (endDateInput < today) {
+        alert("La fecha final no puede ser una fecha pasada.");
+        return;
+    }
+
+    if (endDate < startDate) {
+        alert("La fecha final debe ser después de la fecha de inicio.");
+        return;
+    }
+
+    // Si la validación es correcta, formateamos las fechas
+    const formattedStartDate = formatDate(startDateInput);
+    const formattedEndDate = formatDate(endDateInput);
+
+    // Actualizar el anexo con las fechas seleccionadas
+    if (currentButton) {
+        let dateDisplay = currentButton.querySelector(".date-display");
+        if (!dateDisplay) {
+            dateDisplay = document.createElement("div");
+            dateDisplay.className = "date-display";
+            currentButton.appendChild(dateDisplay);
         }
-        
-        function saveDates() {
-            const startDateInput = document.getElementById("start-date").value;
-            const endDateInput = document.getElementById("end-date").value;
-            const today = new Date().toISOString().split('T')[0]; // Fecha de hoy en formato ISO
-        
-            const startDate = new Date(startDateInput);
-            const endDate = new Date(endDateInput);
-        
-            // Validación de fechas
-            if (!startDateInput || !endDateInput) {
-                alert("Por favor, seleccione ambas fechas.");
-                return;
-            }
-        
-            if (startDateInput < today) {
-                alert("La fecha de inicio no puede ser una fecha pasada.");
-                return;
-            }
-        
-            if (endDateInput < today) {
-                alert("La fecha final no puede ser una fecha pasada.");
-                return;
-            }
-        
-            if (endDate < startDate) {
-                alert("La fecha final debe ser después de la fecha de inicio.");
-                return;
-            }
-        
-            // Si la validación es correcta, formateamos las fechas
-            const formattedStartDate = formatDate(startDateInput);
-            const formattedEndDate = formatDate(endDateInput);
-        
-            // Actualizar el anexo con las fechas seleccionadas
-            if (currentButton) {
-                let dateDisplay = currentButton.querySelector(".date-display");
-                if (!dateDisplay) {
-                    dateDisplay = document.createElement("div");
-                    dateDisplay.className = "date-display";
-                    currentButton.appendChild(dateDisplay);
-                }
-                dateDisplay.textContent = `Inicio: ${formattedStartDate}, Fin: ${formattedEndDate}`;
-            }
-        
-            // Cerrar el modal
-            closeModal();
-        
-            // Enviar notificación al sistema operativo si está permitido
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('Anexo actualizado', {
-                    body: `Se ha asignado una fecha de inicio ${formattedStartDate} y una fecha de fin ${formattedEndDate} para el anexo.`,
-                    icon: '../../assets/images/notification_icon.png'  // Icono opcional para la notificación
-                });
-            } else {
-                alert('Notificación: Se ha asignado una fecha para el anexo.');
-            }
-        }
+        // Agregar un salto de línea entre las fechas
+        dateDisplay.innerHTML = `Inicio: ${formattedStartDate}<br>Fin: ${formattedEndDate}`;
+    }
+
+    // Cerrar el modal
+    closeModal();
+
+    // Enviar notificación al sistema operativo si está permitido
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Anexo actualizado', {
+            body: `Se ha asignado una fecha de inicio ${formattedStartDate} y una fecha de fin ${formattedEndDate} para el anexo.`,
+            icon: '../../assets/images/notification_icon.png'  // Icono opcional para la notificación
+        });
+    } else {
+        alert('Notificación: Se ha asignado una fecha para el anexo.');
+    }
+}
+
 
         // Añadir un nuevo botón al contenido
         function addButton() {
@@ -225,5 +228,7 @@ let currentButton = null;
                 wrapper.remove(); // Elimina el anexo completo
             }
         }
-        /*Manda una notificacion para la fecha */
+        function goBack() {
+            window.location.href = 'adminMenuPrincipal.html';
+        }
         

@@ -10,7 +10,9 @@
 </head>
 <body>
     <div class="sidebar">
-        <h1 class="texto1">ADMIN</h1>
+        <div></div>
+        <button class="back-btn" onclick="location.href='adminMenuPrincipal.html'">Regreso</button>
+        <h1 class="texto1"><br>ADMIN</h1>
         <img src="../../assets/images/imss_logo.png" class="logoimss">
     </div>
     <div class="content-wrapper">
@@ -29,6 +31,7 @@
                 <button class="edit-btn" onclick="editName(this)"><img src="../../assets/images/editIcon_1.png" class="icon"></button>
                 <div class="delete-btn" onclick="deleteAnexo(this)"><img src="../../assets/images/deleteIcon2.png" class="icon"></div>
             </div>
+           
             <button class="floating-btn" onclick="addButton()">Agrega nuevo anexo</button>
             
         </div>
@@ -38,6 +41,29 @@
 
     <!-- Modal -->
     <div class="modal" id="myModal">
+        <div class="date-picker-modal">
+            <h3>Seleccionar la fecha de vencimiento</h3>
+    
+            <div class="date-selection">
+                <div class="date-box">
+                    <span class="date-label">Comienza el</span>
+                    <input type="date" id="start-date" class="date-input">
+                </div>
+    
+                <div class="arrow">&gt;</div>
+    
+                <div class="date-box">
+                    <span class="date-label">Termina el</span>
+                    <input type="date" id="end-date" class="date-input">
+                </div>
+            </div>
+    
+            <div class="button-wrapper">
+                <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+                <button class="accept-btn" onclick="saveDates()">Aceptar</button>
+            </div>
+        </div>
+    </div><div class="modal" id="myModal">
         <div class="modal-content">
             <h3>Seleccionar Fechas</h3>
             <label for="start-date">Fecha de inicio:</label>
