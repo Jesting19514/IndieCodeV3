@@ -11,36 +11,48 @@ let currentButton = null;
             document.getElementById("myModal").style.display = "none";
         }
 
-        // Validar las fechas y guardar las válidas
+        
+        
+        function formatDate(dateString) {
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', options); // Formato en español
+        }
+        
         function saveDates() {
             const startDateInput = document.getElementById("start-date").value;
             const endDateInput = document.getElementById("end-date").value;
-            const today = new Date().toISOString().split('T')[0];
-
+            const today = new Date().toISOString().split('T')[0]; // Fecha de hoy en formato ISO
+        
             const startDate = new Date(startDateInput);
             const endDate = new Date(endDateInput);
-
+        
             // Validación de fechas
             if (!startDateInput || !endDateInput) {
                 alert("Por favor, seleccione ambas fechas.");
                 return;
             }
-
+        
             if (startDateInput < today) {
                 alert("La fecha de inicio no puede ser una fecha pasada.");
                 return;
             }
-
+        
             if (endDateInput < today) {
                 alert("La fecha final no puede ser una fecha pasada.");
                 return;
             }
-
+        
             if (endDate < startDate) {
                 alert("La fecha final debe ser después de la fecha de inicio.");
                 return;
             }
-
+        
+            // Si la validación es correcta, formateamos las fechas
+            const formattedStartDate = formatDate(startDateInput);
+            const formattedEndDate = formatDate(endDateInput);
+        
+            // Actualizar el anexo con las fechas seleccionadas
             if (currentButton) {
                 let dateDisplay = currentButton.querySelector(".date-display");
                 if (!dateDisplay) {
@@ -48,43 +60,59 @@ let currentButton = null;
                     dateDisplay.className = "date-display";
                     currentButton.appendChild(dateDisplay);
                 }
-                dateDisplay.textContent = `Fecha de inicio: ${startDateInput}, Fecha final: ${endDateInput}`;
+                dateDisplay.textContent = `Inicio: ${formattedStartDate}, Fin: ${formattedEndDate}`;
             }
-
+        
+            // Cerrar el modal
             closeModal();
+        
+            // Enviar notificación al sistema operativo si está permitido
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Anexo actualizado', {
+                    body: `Se ha asignado una fecha de inicio ${formattedStartDate} y una fecha de fin ${formattedEndDate} para el anexo.`,
+                    icon: '../../assets/images/notification_icon.png'  // Icono opcional para la notificación
+                });
+            } else {
+                alert('Notificación: Se ha asignado una fecha para el anexo.');
+            }
         }
 
         // Añadir un nuevo botón al contenido
         function addButton() {
-            const content = document.getElementById("content");
-
-            const newButtonWrapper = document.createElement('div');
-            newButtonWrapper.className = 'daycare-item-wrapper';
-
-            const statusCircle = document.createElement('div');
-            statusCircle.className = 'status-circle green'; // Puedes ajustar el color aquí
-            newButtonWrapper.appendChild(statusCircle);
-
-            const newButton = document.createElement('button');
-            newButton.className = 'daycare-item';
-            newButton.onclick = function() { openModal(newButton); };
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'name';
-            nameSpan.textContent = 'Anexo ---';
-            newButton.appendChild(nameSpan);
+            const content = document.getElementById('content');
             
-            const dateDisplay = document.createElement('div');
-            dateDisplay.className = 'date-display';
-            newButton.appendChild(dateDisplay);
-
-            const editButton = document.createElement('button');
-            editButton.className = 'edit-btn';
-            editButton.onclick = function() { editName(editButton); };
-            editButton.textContent = 'Editar Nombre';
-
-            newButtonWrapper.appendChild(newButton);
-            newButtonWrapper.appendChild(editButton);
-            content.appendChild(newButtonWrapper);
+            // Crear un nuevo contenedor para el anexo
+            const newItemWrapper = document.createElement('div');
+            newItemWrapper.className = 'daycare-item-wrapper';
+            
+            // Crear el círculo de estado
+            const statusCircle = document.createElement('div');
+            statusCircle.className = 'status-circle green'; // Cambia el color si es necesario
+            newItemWrapper.appendChild(statusCircle);
+            
+            // Crear el botón del anexo
+            const daycareItem = document.createElement('button');
+            daycareItem.className = 'daycare-item';
+            daycareItem.onclick = function() { openModal(this); };
+            daycareItem.innerHTML = '<span class="name">Anexo Nuevo</span><div class="date-display"></div>';
+            newItemWrapper.appendChild(daycareItem);
+            
+            // Crear el botón de edición con icono
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-btn';
+            editBtn.onclick = function() { editName(this); };
+            editBtn.innerHTML = '<img src="../../assets/images/editIcon_1.png" class="icon">';
+            newItemWrapper.appendChild(editBtn);
+            
+            // Crear el botón de eliminación con icono
+            const deleteBtn = document.createElement('div');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() { deleteAnexo(this); };
+            deleteBtn.innerHTML = '<img src="../../assets/images/deleteIcon2.png" class="icon">';
+            newItemWrapper.appendChild(deleteBtn);
+            
+            // Añadir el nuevo anexo al contenido
+            content.insertBefore(newItemWrapper, content.querySelector('.floating-btn'));
         }
 
         // Función para editar el nombre del botón
@@ -171,17 +199,18 @@ let currentButton = null;
             daycareItem.innerHTML = '<span class="name">Anexo Nuevo</span><div class="date-display"></div>';
             newItemWrapper.appendChild(daycareItem);
             
-            // Crear el botón de edición
+            // Crear el botón de edición con icono
             const editBtn = document.createElement('button');
             editBtn.className = 'edit-btn';
             editBtn.onclick = function() { editName(this); };
-            editBtn.textContent = 'Editar Nombre';
+            editBtn.innerHTML = '<img src="../../assets/images/editIcon_1.png" class="icon">';
             newItemWrapper.appendChild(editBtn);
             
-            // Crear el botón de eliminación
+            // Crear el botón de eliminación con icono
             const deleteBtn = document.createElement('div');
             deleteBtn.className = 'delete-btn';
             deleteBtn.onclick = function() { deleteAnexo(this); };
+            deleteBtn.innerHTML = '<img src="../../assets/images/deleteIcon2.png" class="icon">';
             newItemWrapper.appendChild(deleteBtn);
             
             // Añadir el nuevo anexo al contenido
@@ -196,4 +225,5 @@ let currentButton = null;
                 wrapper.remove(); // Elimina el anexo completo
             }
         }
+        /*Manda una notificacion para la fecha */
         
