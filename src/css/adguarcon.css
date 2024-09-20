@@ -87,36 +87,6 @@ body {
 .back-button:hover {
     background-color: #9e9e9e;
 }
-.delete-button, .edit-button {
-    padding: 15px 20px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.delete-button {
-    background-color: #e74d3c00;
-    opacity: 0.5;
-}
-
-.delete-button:hover {
-    background-color: #ecf0f100;
-    transform: translateY(-5px); 
-    opacity: 1;
-}
-
-.edit-button {
-    background-color: #3498db00;
-    opacity: 0.5;
-}
-
-.edit-button:hover {
-    background-color: #297fb900;
-    transform: translateY(-5px); 
-    opacity: 1;
-}
 
 .daycare-item {
     font-family: 'Quicksand', sans-serif;
@@ -172,7 +142,7 @@ body {
 .content h1 {
     font-family: 'Quicksand', sans-serif;
     font-size: 300%;
-    color: black;
+    color: gray;
     margin-top: 1;
-    text-shadow: 1px 1px 10px grey;
+    text-shadow: 1px 1px 3px rgb(0, 0, 0);
 }
