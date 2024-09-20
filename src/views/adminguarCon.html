@@ -3,78 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Admin Contratos</title>
     <link rel="stylesheet" href="../css/adguarcon.css">
-    
-    <title>Contratos</title>
-
 </head>
 <body>
     <div class="sidebar">
-        <div></div>
-        <button class="back-btn" onclick="location.href='adminMenuPrincipal.html'">Regreso</button>
-        <h1 class="texto1"><br>ADMIN</h1>
+        <h2>ADMIN</h2> 
         <img src="../../assets/images/imss_logo.png" class="logoimss">
     </div>
-    <div class="content-wrapper">
-        <div class="content" id="content">
-            
-                <h2>Guarderia 1</h2>
-            
-            
-            <!-- Botones iniciales -->
-            <div class="daycare-item-wrapper">
-                <div class="status-circle green"></div>
-                <button class="daycare-item" onclick="openModal(this)">
-                    <span class="name">Anexo ---</span>
-                    <div class="date-display"></div>
-                </button>
-                <button class="edit-btn" onclick="editName(this)"><img src="../../assets/images/editIcon_1.png" class="icon"></button>
-                <div class="delete-btn" onclick="deleteAnexo(this)"><img src="../../assets/images/deleteIcon2.png" class="icon"></div>
-            </div>
-           
-            <button class="floating-btn" onclick="addButton()">Agrega nuevo anexo</button>
-            
-        </div>
-        <div class="spacer"></div>
-       
-    </div>
-
-    <!-- Modal -->
-    <div class="modal" id="myModal">
-        <div class="date-picker-modal">
-            <h3>Seleccionar la fecha de vencimiento</h3>
-    
-            <div class="date-selection">
-                <div class="date-box">
-                    <span class="date-label">Comienza el</span>
-                    <input type="date" id="start-date" class="date-input">
-                </div>
-    
-                <div class="arrow">&gt;</div>
-    
-                <div class="date-box">
-                    <span class="date-label">Termina el</span>
-                    <input type="date" id="end-date" class="date-input">
-                </div>
-            </div>
-    
-            <div class="button-wrapper">
-                <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
-                <button class="accept-btn" onclick="saveDates()">Aceptar</button>
+    <div class="content">
+        
+        <div id="daycare-list">
+            <h1>Guarderia x</h1>
+            <div class="daycare-item-container">
+                <button class="daycare-item" onclick="location.href='prueba.html'">Contrato 1</button>
+                <button class="edit-button" onclick="editName(this)"><img src="../../assets/images/editIcon_1.png" class="icon"></button>
+                <button class="delete-button" onclick="deleteDaycare(this)"><img src="../../assets/images/deleteIcon2.png" class="icon"></button>
             </div>
         </div>
-    </div><div class="modal" id="myModal">
-        <div class="modal-content">
-            <h3>Seleccionar Fechas</h3>
-            <label for="start-date">Fecha de inicio:</label>
-            <input type="date" id="start-date" class="date-input">
-            
-            <label for="end-date">Fecha final:</label>
-            <input type="date" id="end-date" class="date-input">
-            
-            <button class="accept-btn" onclick="saveDates()">Aceptar</button>
-            <button class="close-btn" onclick="closeModal()">Cerrar</button>
-        </div>
+        <button class="back-button" onclick="location.href='adminMenuPrincipal.html'">Regresar</button>
+        <button class="add-button" onclick="addDaycare()">Agregar <td> Contratos</button>
     </div>
     <script src="/IndieCodeV3/src/js/adguarcont.js"></script>
 </body>
