@@ -170,3 +170,97 @@ body {
     transform: translateY(-5px); 
     box-shadow: 0 8px 1px rgba(241, 2, 2, 0.527); 
 }
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal h2 {
+    margin: 0;
+}
+
+.modal input {
+    width: 100%;
+    padding: 5px;
+}
+
+.modal button {
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.daycare-item, .daycare-item2, .daycare-item3 {
+    white-space: normal;  /* Allow text to wrap inside the button */
+    text-align: left;     /* Align text to the left */
+    line-height: 1.5;     /* Adjust line height for readability */
+    word-break: break-word; /* Ensure long words wrap correctly */
+}
+.daycare-item .date-text,
+.daycare-item2 .date-text,
+.daycare-item3 .date-text {
+    font-size: 0.8em; /* Smaller font for the dates */
+    color: #555; /* Optional: lighter color for the dates */
+}
+.button-icon {
+    display: flex;           /* Asegúrate de que se alineen correctamente */
+    align-items: center;    /* Alinear verticalmente */
+    background: transparent; /* Eliminar fondo */
+    border: none;           /* Eliminar borde */
+}
+.edit-button {
+    background-color: #3498db00;
+    opacity: 0.5;
+}
+.edit-button:hover {
+    background-color: #297fb900;
+    transform: translateY(-5px); 
+    opacity: 1;
+}
+.edit-button {
+    padding: 15px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.icon {
+    width: 40px;
+    cursor: pointer;
+    background: transparent; /* Eliminar fondo del icono */
+    border: none;            /* Eliminar borde del icono */
+    
+}
+#button-name-input {
+    padding: 5px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#confirm-name-button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Cambia el color según tu diseño */
+    color: white;
+    cursor: pointer;
+}
+
+#confirm-name-button:hover {
+    background-color: #45a049;
+}

@@ -1,71 +1,105 @@
-function addDaycare() {
-    // Obtener la lista de contratos
-    const daycareList = document.getElementById('daycare-list');
-    
-    // Crear un contenedor para el nuevo contrato
-    const daycareContainer = document.createElement('div');
-    daycareContainer.classList.add('daycare-item-container');
+let selectedButton = null; // Variable para almacenar el botón seleccionado
+let existingDates = {}; // Objeto para almacenar fechas existentes para todos los documentos
 
-    // Crear el botón del contrato
-    const newContractButton = document.createElement('button');
-    newContractButton.classList.add('daycare-item');
-    newContractButton.textContent = `Contrato ${document.querySelectorAll('.daycare-item').length + 1}`;
-    newContractButton.onclick = function() {
-        location.href = 'prueba.html'; // Redirigir a la página del contrato
-    };
-
-    // Crear el botón de edición
-    const editButton = document.createElement('button');
-    editButton.classList.add('edit-button');
-    const editIcon = document.createElement('img');
-    editIcon.src = '../../assets/images/editIcon_1.png';
-    editIcon.classList.add('icon');
-    editButton.appendChild(editIcon);
-    editButton.onclick = function() {
-        editName(this); // Llamar a la función de edición
-    };
-
-    // Crear el botón de eliminación
-    const deleteButton = document.createElement('button');
-    deleteButton.classList.add('delete-button');
-    const deleteIcon = document.createElement('img');
-    deleteIcon.src = '../../assets/images/deleteIcon2.png';
-    deleteIcon.classList.add('icon');
-    deleteButton.appendChild(deleteIcon);
-    deleteButton.onclick = function() {
-        deleteDaycare(this); // Llamar a la función de eliminación
-    };
-
-    // Añadir los elementos al contenedor del nuevo contrato
-    daycareContainer.appendChild(newContractButton);
-    daycareContainer.appendChild(editButton);
-    daycareContainer.appendChild(deleteButton);
-
-    // Añadir el nuevo contrato a la lista
-    daycareList.appendChild(daycareContainer);
+function openDatePicker(button) {
+    selectedButton = button; // Almacenar el botón en el que se ha hecho clic
+    document.getElementById('date-modal').style.display = 'block'; // Mostrar el modal
 }
 
-function deleteDaycare(button) {
-    // Elimina el contrato al que pertenece el botón eliminar
-    const daycareContainer = button.parentElement;
-    daycareContainer.remove();
+function closeModal() {
+    document.getElementById('date-modal').style.display = 'none'; // Ocultar el modal
 }
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2); // Obtener los últimos dos dígitos del año
+    return `${day}/${month}/${year}`;
+}
+
+function validateDates(startDate, endDate) {
+    const today = new Date().setHours(0, 0, 0, 0); // Obtener la fecha actual, ignorando la hora
+    const start = new Date(startDate).setHours(0, 0, 0, 0);
+    const end = new Date(endDate).setHours(0, 0, 0, 0);
+
+    if (start < today) {
+        alert('La fecha de inicio no puede ser en el pasado.');
+        return false;
+    }
+    if (start >= end) {
+        alert('La fecha de inicio debe ser anterior a la fecha de término.');
+        return false;
+    }
+    return true;
+}
+
+function saveDates() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    if (startDate && endDate) {
+        // Validar las fechas antes de guardar
+        if (!validateDates(startDate, endDate)) {
+            return; // Salir si la validación falla
+        }
+
+        // Permitir reutilizar fechas en diferentes documentos
+        const buttonKey = selectedButton.textContent.trim().split('\n')[0]; // Usar solo el nombre del documento
+
+        const formattedStartDate = formatDate(startDate);
+        const formattedEndDate = formatDate(endDate);
+
+        // Almacenar fechas para el botón actual
+        existingDates[buttonKey] = { start: formattedStartDate, end: formattedEndDate };
+
+        // Actualizar el botón con las nuevas fechas
+        selectedButton.innerHTML = `<span class="document-name">${buttonKey}</span><br><span class="date-text">Fecha de inicio: ${formattedStartDate}<br>Fecha de término: ${formattedEndDate}</span>`;
+        closeModal(); // Ocultar el modal después de guardar
+    } else {
+        alert('Por favor, selecciona ambas fechas.');
+    }
+}
+// Actualiza el botón con las nuevas fechas
+
 
 function editName(button) {
-    // Aquí puedes agregar la lógica para editar el nombre del contrato
-    const contractButton = button.parentElement.querySelector('.daycare-item');
-    const newName = prompt('Nuevo nombre del contrato:', contractButton.textContent);
-    if (newName) {
-        contractButton.textContent = newName;
-    }
-}
-function deleteDaycare(button) {
-    // Mostrar una confirmación antes de eliminar
-    const confirmation = confirm("¿Estás seguro de que deseas borrar este contrato?");
+    const nameElement = button.previousElementSibling.querySelector('.document-name'); // Selecciona solo el nombre
+    const currentName = nameElement.textContent.trim(); // Obtén solo el nombre
+    const newName = prompt('Ingrese el nuevo nombre:', currentName);
     
-    if (confirmation) {
-        // Si el usuario confirma, procedemos a eliminar
-        const daycareItemContainer = button.parentElement;
-        daycareItemContainer.remove();
+    if (newName !== null && newName !== "") {
+        // Mantener la fecha existente
+        const existingDateInfo = existingDates[currentName] ? `<br><span class="date-text">Fecha de inicio: ${existingDates[currentName].start}<br>Fecha de término: ${existingDates[currentName].end}</span>` : '';
+        
+        // Cambia solo el nombre
+        nameElement.innerHTML = newName;
+
+        // Actualizar las fechas en el objeto existingDates
+        existingDates[newName] = existingDates[currentName]; // Copiar las fechas a la nueva clave
+        delete existingDates[currentName]; // Eliminar las fechas de la clave anterior
     }
 }
+document.getElementById('daycare-button').addEventListener('click', function() {
+    const inputField = document.getElementById('button-name-input');
+    const confirmButton = document.getElementById('confirm-name-button');
+
+    // Mostrar el campo de entrada y el botón de confirmación
+    inputField.style.display = 'inline';
+    confirmButton.style.display = 'inline';
+});
+
+document.getElementById('confirm-name-button').addEventListener('click', function() {
+    const newName = document.getElementById('button-name-input').value;
+    const daycareButton = document.getElementById('daycare-button');
+
+    // Cambiar el nombre del botón
+    daycareButton.textContent = newName;
+
+    // Ocultar el campo de entrada y el botón de confirmación
+    document.getElementById('button-name-input').style.display = 'none';
+    document.getElementById('confirm-name-button').style.display = 'none';
+});
+
+
+
