@@ -72,24 +72,82 @@ function doNothing() {
     // No hace nada
 }
 
+function convertToDate(dateString) {
+    // Asumimos que el formato es "dd/mm/yy"
+    const [day, month, year] = dateString.split('/').map(Number);
+    // Convertir al formato "yyyy-mm-dd" (año completo)
+    return new Date(`20${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+}
+
 function checkDatesAndUpdate() {
-    const today = new Date();
-    const twoWeeksInMillis = 14 * 24 * 60 * 60 * 1000; // Milisegundos en 2 semanas
+    const today = new Date().setHours(0, 0, 0, 0); // La fecha de hoy sin horas
 
     // Recorremos todos los botones para verificar las fechas
     document.querySelectorAll('.daycare-item').forEach(button => {
         const dateText = button.querySelector('.date-text');
+
         if (dateText) {
+            // Extraer las fechas del HTML (asegúrate de que el formato sea correcto)
+            const startDateText = dateText.innerHTML.split('Fecha de inicio: ')[1].split('<br>')[0];
             const endDateText = dateText.innerHTML.split('Fecha de término: ')[1];
-            const endDate = new Date(endDateText.split('<br>')[0]);
+            
+            // Verificar que las fechas se están obteniendo correctamente
+            console.log("Start Date:", startDateText);
+            console.log("End Date:", endDateText);
 
-            // Calcular la diferencia entre la fecha actual y la fecha final
-            const timeDifference = endDate - today;
+            // Convertir las fechas al formato Date utilizando la nueva función
+            const startDate = convertToDate(startDateText);
+            const endDate = convertToDate(endDateText);
 
-            // Aquí podrías añadir lógica adicional si necesitas alertar al usuario u otra acción
-            if (timeDifference <= twoWeeksInMillis && timeDifference > 0) {
-                console.log("Faltan menos de dos semanas para la fecha final.");
+            // Calcular los días totales entre la fecha de inicio y la fecha de término
+            const totalDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)); // Convertir ms a días, redondeado
+
+            // Calcular los días restantes desde hoy hasta la fecha de término
+            const daysRemaining = Math.max(0, Math.round((endDate - today) / (1000 * 60 * 60 * 24))); // Evitar negativos y redondear
+
+            // Depuración: verificar los días calculados
+            console.log("Total Days:", totalDays);
+            console.log("Days Remaining:", daysRemaining);
+
+            // Condiciones de los colores según el número de días restantes
+            if (daysRemaining <= 14) {
+                console.log("Applying red shadow");
+                button.style.boxShadow = '0 5px 5px rgba(241, 2, 2, 0.692)'; // Rojo
+            }  else if (daysRemaining > totalDays / 2) {
+                console.log("Applying green shadow");
+                button.style.boxShadow = '0 5px 5px rgba(0, 255, 0, 0.692)'; // Verde
+            }
+            else if (daysRemaining < totalDays / 2) {
+                console.log("Applying orange shadow");
+                button.style.boxShadow = '0 5px 5px rgba(255, 145, 0, 0.692)'; // Naranja
             }
         }
     });
+}
+
+
+
+
+
+function saveDates() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    if (startDate && endDate) {
+        const formattedStartDate = formatDate(startDate);
+        const formattedEndDate = formatDate(endDate);
+
+        // Asegurarse de que el botón solo contenga el nombre, sin fechas previas
+        const buttonContent = selectedButton.textContent.split('Fecha de inicio')[0].trim();
+
+        // Actualizar el contenido del botón con el nombre del documento y las nuevas fechas
+        selectedButton.innerHTML = `${buttonContent}<br><span class="date-text">Fecha de inicio: ${formattedStartDate}<br>Fecha de término: ${formattedEndDate}</span>`;
+        
+        closeModal(); // Ocultar el modal después de guardar las fechas
+
+        // Verificar fechas y actualizar los colores
+        checkDatesAndUpdate();
+    } else {
+        alert('Por favor, selecciona ambas fechas.');
+    }
 }
