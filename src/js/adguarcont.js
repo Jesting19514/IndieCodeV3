@@ -46,23 +46,32 @@ function saveDates() {
         // Asegurarse de que el botón solo contenga el nombre, sin fechas previas
         const buttonContent = selectedButton.textContent.split('Fecha de inicio')[0].trim();
 
-        // Actualizar el contenido del botón con el nombre del documento y las nuevas fechas
-        selectedButton.innerHTML = `${buttonContent}<br><span class="date-text">Fecha de inicio: ${formattedStartDate}<br>Fecha de término: ${formattedEndDate}</span>`;
+        // Guardar las fechas en el botón
+        selectedButton.innerHTML = `${buttonContent}<br><span class="date-text" style="display:none;">Fecha de inicio: ${formattedStartDate}<br>Fecha de término: ${formattedEndDate}</span>`;
         
         closeModal(); // Ocultar el modal después de guardar las fechas
-
-        // Verificar fechas
-        checkDatesAndUpdate();
     } else {
         alert('Por favor, selecciona ambas fechas.');
     }
 }
 
+// Alternar la visibilidad de las fechas al hacer clic en el botón del documento
+function toggleDates(button) {
+    const dateText = button.querySelector('.date-text');
+    if (dateText) {
+        if (dateText.style.display === 'none' || dateText.style.display === '') {
+            dateText.style.display = 'block'; // Mostrar fechas
+        } else {
+            dateText.style.display = 'none'; // Ocultar fechas
+        }
+    }
+}
 
 // Función que no hace nada cuando se hace clic en el botón del documento
 function doNothing() {
     // No hace nada
 }
+
 function checkDatesAndUpdate() {
     const today = new Date();
     const twoWeeksInMillis = 14 * 24 * 60 * 60 * 1000; // Milisegundos en 2 semanas
