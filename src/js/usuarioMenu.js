@@ -1,25 +1,34 @@
 let selectedButton = null; // Variable para almacenar el botón seleccionado
+let existingDates = {}; // Objeto para almacenar fechas existentes para todos los documentos
 let disabledButtons = new Set(); // Conjunto para almacenar los botones que tienen la fecha desactivada
 let modifiedButtons = new Set(); // Conjunto para almacenar botones que han sido modificados al menos una vez
+let firstModificationDone = false; // Bandera para indicar si se ha realizado la primera modificación
 
 // Abrir el selector de fechas cuando se hace clic en el botón de edición
 function openDatePicker(button) {
     const associatedButton = button.previousElementSibling; // Botón asociado al documento
     const checkbox = button.nextElementSibling; // Checkbox asociado
-
+    
     // Verificar si ya se ha modificado antes
     const isModified = modifiedButtons.has(associatedButton);
 
-    // Solo permitir modificar si el checkbox está marcado y el estado es gris
+    // Permitir modificar si cumple las condiciones
     if (!isModified) {
-        if (checkbox.checked && isInGrayState(associatedButton)) {
+        // Solo requiere que el checkbox esté marcado en la primera modificación
+        if (checkbox.checked) {
             selectedButton = associatedButton; // Permitir modificar
             document.getElementById('date-modal').style.display = 'block'; // Mostrar el modal
         } else {
-            alert('Solo puedes modificar la fecha si el estado está en gris y el checkbox está marcado.');
+            alert('Debes marcar el checkbox para modificar la fecha.');
         }
     } else {
-        alert('Este botón ya ha sido modificado, no puedes modificarlo nuevamente.');
+        // Después de la primera modificación, requiere que el estado esté en rojo y el checkbox esté marcado
+        if (associatedButton.style.boxShadow.includes('rgba(241, 2, 2') && checkbox.checked) {
+            selectedButton = associatedButton; // Permitir modificar
+            document.getElementById('date-modal').style.display = 'block'; // Mostrar el modal
+        } else {
+            alert('Solo puedes modificar la fecha cuando el estado esté en rojo y el checkbox esté marcado.');
+        }
     }
 }
 
@@ -54,9 +63,12 @@ function saveDates() {
         
         closeModal(); // Ocultar el modal después de guardar las fechas
 
-        // Añadir el botón modificado al conjunto
+        // Agregar a la lista de botones modificados
         modifiedButtons.add(selectedButton);
         
+        // Marcar que la primera modificación se ha realizado
+        firstModificationDone = true;
+
         // Reactivar el botón si estaba desactivado
         const checkbox = selectedButton.nextElementSibling.nextElementSibling; // Seleccionar la casilla de verificación
         if (checkbox.checked) {
@@ -67,8 +79,8 @@ function saveDates() {
         // Verificar fechas y actualizar los colores
         checkDatesAndUpdate(); // Actualizar los colores según las fechas
 
-        // Reanudar las alarmas si estaban detenidas
-        resumeAlarms(selectedButton);
+        // Reanudar las alarmas
+        resumeAlarms(selectedButton); // Reanudar alarmas para el botón modificado
     } else {
         alert('Por favor, selecciona ambas fechas.');
     }
@@ -92,19 +104,41 @@ function toggleCheckbox(checkbox) {
 
 // Función para detener las alarmas (el contador) cuando el checkbox está marcado
 function stopAlarms(button) {
-    console.log(`Alarmas detenidas para el botón: ${button.textContent}`);
-    // Aquí puedes agregar lógica para detener las alarmas reales
+    const dateText = button.querySelector('.date-text');
+    if (dateText) {
+        const startDateText = dateText.innerHTML.split('Fecha de inicio: ')[1].split('<br>')[0];
+        const endDateText = dateText.innerHTML.split('Fecha de término: ')[1];
+
+        const startDate = convertToDate(startDateText);
+        const endDate = convertToDate(endDateText);
+
+        const today = new Date().setHours(0, 0, 0, 0);
+        const daysRemaining = Math.max(0, Math.round((endDate - today) / (1000 * 60 * 60 * 24)));
+
+        if (daysRemaining <= 0) {
+            console.log("Alarma detenida para este documento.");
+        } else {
+            console.log(`Alarmas detenidas. Días restantes: ${daysRemaining}`);
+        }
+    }
 }
 
 // Función para reanudar las alarmas
 function resumeAlarms(button) {
-    console.log(`Alarmas reanudadas para el botón: ${button.textContent}`);
-    // Aquí puedes agregar lógica para reanudar las alarmas reales
-}
+    const dateText = button.querySelector('.date-text');
+    if (dateText) {
+        const startDateText = dateText.innerHTML.split('Fecha de inicio: ')[1].split('<br>')[0];
+        const endDateText = dateText.innerHTML.split('Fecha de término: ')[1];
 
-// Función para verificar si el botón está en estado gris
-function isInGrayState(button) {
-    return button.style.boxShadow.includes('rgba(128, 128, 128');
+        const startDate = convertToDate(startDateText);
+        const endDate = convertToDate(endDateText);
+
+        const today = new Date().setHours(0, 0, 0, 0);
+        const daysRemaining = Math.max(0, Math.round((endDate - today) / (1000 * 60 * 60 * 24)));
+
+        console.log(`Alarmas reanudadas. Días restantes: ${daysRemaining}`);
+        // Aquí puedes implementar la lógica para reiniciar las alertas si es necesario
+    }
 }
 
 // Función para convertir la fecha
