@@ -42,37 +42,28 @@ function closeDeleteConfirmModal() {
 }
 
 async function editDaycare(button) {
-    // Muestra el modal para editar
     showModal('edit', button);
 
-    // Obtiene el contenedor de la guardería y el ID
     const daycareContainer = button.closest('.daycare-item-container');
     const id = daycareContainer.getAttribute('data-id');
+    const currentRazonSocial = button.previousElementSibling.textContent;
+    const currentNumGuarderia = button.getAttribute('data-num-guarderia'); // Obtén el número de guardería actual
 
-    // Obtén el nombre y las fechas actuales de la guardería
-    const currentName = daycareContainer.querySelector('.daycare-item').textContent;
-    const currentStartDate = daycareContainer.getAttribute('data-start-date');
-    const currentEndDate = daycareContainer.getAttribute('data-end-date');
+    // Llena los campos del modal con la información actual
+    document.getElementById('modal-input').value = currentRazonSocial;
+    document.getElementById('num-guarderia').value = currentNumGuarderia;
 
-    // Llenar los campos de entrada con el nombre y las fechas actuales
-    const modalInput = document.getElementById('modal-input');
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
-    
-    modalInput.value = currentName;
-    startDateInput.value = currentStartDate;
-    endDateInput.value = currentEndDate;
-    
     document.getElementById('modal-confirm').onclick = async () => {
-        const newName = modalInput.value;
-        const newStartDate = startDateInput.value;
-        const newEndDate = endDateInput.value;
+        const newName = document.getElementById('modal-input').value;
+        const newNumGuarderia = document.getElementById('num-guarderia').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
 
-        if (newName && newStartDate && newEndDate) {
+        if (newName && newNumGuarderia && startDate && endDate) {
             const messageContainer = document.createElement('div');
             messageContainer.textContent = "Espere un segundo...";
-            messageContainer.style.color = "blue";
-            messageContainer.style.marginTop = "10px";
+            messageContainer.style.color = "blue"; 
+            messageContainer.style.marginTop = "10px"; 
             const modalContent = document.querySelector('.modal-content'); 
             modalContent.appendChild(messageContainer); 
 
@@ -82,14 +73,14 @@ async function editDaycare(button) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         razon_social: newName,
-                        fecha_inicio: newStartDate,
-                        fecha_termino: newEndDate
+                        fecha_inicio: startDate,
+                        fecha_termino: endDate,
+                        num_guarderia: newNumGuarderia
                     })
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    button.previousElementSibling.textContent = newName;
                     closeModal(); 
                     loadDaycares(); 
                 } else {
@@ -273,7 +264,6 @@ async function addDaycare() {
         }
     };
 }
-
 function filterDaycares() {
     const searchTerm = document.getElementById('search-bar').value.toLowerCase();
     const daycareItems = document.querySelectorAll('.daycare-item-container');
@@ -281,9 +271,9 @@ function filterDaycares() {
     daycareItems.forEach(daycareItem => {
         const name = daycareItem.querySelector('.daycare-item').textContent.toLowerCase();
         if (name.includes(searchTerm)) {
-            daycareItem.style.display = 'flex'; // Mostrar el elemento si coincide con la búsqueda
+            daycareItem.style.display = 'flex'; // Mostrar el elemento si coincide con la búsqueda.
         } else {
-            daycareItem.style.display = 'none'; // Ocultar el elemento si no coincide
+            daycareItem.style.display = 'none'; // Ocultar el elemento si no coincide.
         }
     });
 }

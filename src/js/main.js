@@ -31,7 +31,7 @@ serverApp.get('/api/daycares', async (req, res) => {
 
 serverApp.put('/api/daycares/:id', async (req, res) => {
     const { id } = req.params;
-    const { razon_social, fecha_inicio, fecha_termino } = req.body;
+    const { razon_social, fecha_inicio, fecha_termino, num_guarderia } = req.body;
 
     try {
         await client.connect();
@@ -43,7 +43,8 @@ serverApp.put('/api/daycares/:id', async (req, res) => {
             { $set: { 
                 razon_social: razon_social,
                 fecha_inicio: new Date(fecha_inicio),
-                fecha_termino: new Date(fecha_termino)
+                fecha_termino: new Date(fecha_termino),
+                num_guarderia: num_guarderia  // Agregar el campo num_guarderia
             } }
         );
 
@@ -59,6 +60,7 @@ serverApp.put('/api/daycares/:id', async (req, res) => {
         await client.close();
     }
 });
+
 
 
 serverApp.delete('/api/daycares/:id', async (req, res) => {
@@ -143,7 +145,7 @@ app.on('activate', function () {
 });
 
 serverApp.post('/api/daycares', async (req, res) => {
-    const { _id, razon_social, id_usuario_gerente, fecha_inicio, fecha_termino } = req.body;
+    const { _id, razon_social, id_usuario_gerente, fecha_inicio, fecha_termino, num_guarderia } = req.body;
 
     try {
         await client.connect();
@@ -154,8 +156,9 @@ serverApp.post('/api/daycares', async (req, res) => {
             _id: _id,
             razon_social: razon_social,
             id_usuario_gerente: id_usuario_gerente,
-            fecha_inicio: new Date(fecha_inicio),  // Asegúrate de convertir a Date si es necesario
-            fecha_termino: new Date(fecha_termino)   // Asegúrate de convertir a Date si es necesario
+            fecha_inicio: new Date(fecha_inicio),  // Convertir a Date
+            fecha_termino: new Date(fecha_termino), // Convertir a Date
+            num_guarderia: num_guarderia // Agregar el campo num_guarderia
         });
 
         res.json({ success: true, message: 'Guardería agregada correctamente.', id: result.insertedId });
