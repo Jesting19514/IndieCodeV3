@@ -1,49 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
-    
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Admin</title>
-    <link rel="stylesheet" href="../src/css/reportesStyle.css">
+    <title>Documentos de Empresas</title>
+    <link rel="stylesheet" href="../src/css/reportes.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>ADMIN</h2> 
-        <img src="../src/assets/images/imss_logo.png" class="logoimss">
+<!-- Barra lateral -->
+<div class="sidebar">
+    <h2>Admin</h2>
+    <img src="../src/assets/images/imss_logo.png" alt="Logo" width="200px">
+</div>
+
+<!-- Contenido principal -->
+<div class="content">
+    <h1>Distribución de Documentos por Empresa</h1>
+
+    <!-- Tabla para la empresa con más documentos vencidos -->
+    <div class="table-container">
+        <h2>Empresa con Más Documentos Vencidos</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Empresa</th>
+                <th>Documentos Vencidos</th>
+            </tr>
+            </thead>
+            <tbody id="vencidosTableBody"></tbody>
+        </table>
     </div>
-    <div class="content">
-        <div id="daycare-list">
-            <div class="daycare-item-container">
-                <!-- Content for daycare items -->
-            </div>
-        </div>
-        <canvas id="grafica"></canvas>
-        <button class="add-button" onclick="addDaycare()">Volver</button>
+
+    <!-- Contenedor para el gráfico total de barras -->
+    <div class="chart-container" id="total">
+        <div class="chart-title">Total de Documentos por Estado</div>
+        <canvas id="totalDocumentChart" width="800" height="400"></canvas>
     </div>
-    
-    <script src="../src/js/menuadmin.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-    <script>
-    const labels = ['Enero', 'Febrero', 'Marzo', 'Abril']
 
-const graph = document.querySelector("#grafica");
+    <div id="charts"></div> <!-- Contenedor para los gráficos individuales -->
+</div>
 
-const data = {
-    labels: labels,
-    datasets: [{
-        label:"Ejemplo 1",
-        data: [1, 2, 3, 4],
-        backgroundColor: 'rgba(9, 129, 176, 0.2)'
-    }]
-};
+<!-- Modal para mostrar documentos -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Documentos de <span id="empresaNombre"></span></h2>
+        <table class="document-table">
+            <thead>
+            <tr>
+                <th>Nombre del Documento</th>
+                <th>Estado</th>
+                <th>Fecha de Creación</th>
+                <th>Fecha de Vencimiento</th>
+            </tr>
+            </thead>
+            <tbody id="documentList"></tbody>
+        </table>
+    </div>
+</div>
 
-const config = {
-    type: 'bar',
-    data: data,
-};
+<script>
+    fetch('datos.json')
+        .then(response => response.json())
+        .then(data => {
+            const chartsContainer = document.getElementById('charts');
+            const totalCounts = { activo: 0, proximo: 0, vencido: 0 };
+            let maxVencidos = 0;
+            let empresaConMasVencidos = '';
 
-new Chart(graph, config);
-    </script>
+            data.forEach(empresa => {
+                const documentCounts = { activo: 0, proximo: 0, vencido: 0 };
+
+                empresa.documentos.forEach(documento => {
+                    if (documento.status === 'activo') {
+                        documentCounts.activo++;
+                        totalCounts.activo++;
+                    } else if (documento.status === 'próximo a vencer') {
+                        documentCounts.proximo++;
+                        totalCounts.proximo++;
+                    } else if (documento.status === 'vencido') {
+                        documentCounts.vencido++;
+                        totalCounts.vencido++;
+                    }
+                });
+
+                if (documentCounts.vencido > maxVencidos) {
+                    maxVencidos = documentCounts.vencido;
+                    empresaConMasVencidos = empresa.nombre_empresa;
+                }
+
+                const chartContainer = document.createElement('div');
+                chartContainer.className = 'chart-container';
+                chartContainer.innerHTML = `<div class="chart-title">Documentos de ${empresa.nombre_empresa}</div><canvas id="chart-${empresa.nombre_empresa.replace(/\s+/g, '')}"></canvas>`;
+                chartsContainer.appendChild(chartContainer);
+
+                const ctx = document.getElementById(`chart-${empresa.nombre_empresa.replace(/\s+/g, '')}`).getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Activos', 'Próximo a Vencer', 'Vencidos'],
+                        datasets: [{
+                            label: 'Documentos',
+                            data: [documentCounts.activo, documentCounts.proximo, documentCounts.vencido],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(255, 159, 64, 0.7)',
+                                'rgba(255, 99, 132, 0.7)'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            title: {
+                                display: true,
+                                text: `Documentos de ${empresa.nombre_empresa}`
+                            }
+                        }
+                    }
+                });
+
+                chartContainer.addEventListener('click', () => {
+                    const documentList = document.getElementById('documentList');
+                    documentList.innerHTML = '';
+
+                    const empresaNombre = document.getElementById('empresaNombre');
+                    empresaNombre.textContent = empresa.nombre_empresa;
+
+                    empresa.documentos.forEach(documento => {
+                        const listItem = document.createElement('tr');
+
+                        let estadoColor;
+                        switch (documento.status) {
+                            case 'activo':
+                                estadoColor = 'green';
+                                break;
+                            case 'próximo a vencer':
+                                estadoColor = 'orange';
+                                break;
+                            case 'vencido':
+                                estadoColor = 'red';
+                                break;
+                            default:
+                                estadoColor = 'black';
+                        }
+
+                        listItem.innerHTML = `<td>${documento.nombre_documento}</td><td style="color: ${estadoColor};">${documento.status}</td><td>${documento.fecha_creación}</td><td>${documento.fecha_vencimiento}</td>`;
+                        documentList.appendChild(listItem);
+                    });
+
+                    const modal = document.getElementById('myModal');
+                    modal.style.display = "block";
+                });
+            });
+
+            const ctxTotal = document.getElementById('totalDocumentChart').getContext('2d');
+            const totalDocumentChart = new Chart(ctxTotal, {
+                type: 'bar',
+                data: {
+                    labels: ['Activos', 'Próximo a Vencer', 'Vencidos'],
+                    datasets: [{
+                        label: 'Total de Documentos',
+                        data: [totalCounts.activo, totalCounts.proximo, totalCounts.vencido],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 99, 132, 0.7)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Total de Documentos por Estado'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Documentos'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Estado'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const tableBody = document.getElementById('vencidosTableBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `<td class="highlight">${empresaConMasVencidos}</td><td class="highlight">${maxVencidos}</td>`;
+            tableBody.appendChild(row);
+        })
+        .catch(error => console.error('Error al cargar los datos:', error));
+
+    const modal = document.getElementById('myModal');
+    const span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 </body>
 </html>

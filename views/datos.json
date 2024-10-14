@@ -1,0 +1,388 @@
+[
+  {
+    "nombre_empresa": "Empresa A",
+    "documentos": [
+      {
+        "nombre_documento": "Contrato",
+        "status": "activo",
+        "fecha_creación": "2023-09-01",
+        "fecha_vencimiento": "2024-09-01"
+      },
+      {
+        "nombre_documento": "Licencia",
+        "status": "próximo a vencer",
+        "fecha_creación": "2022-10-01",
+        "fecha_vencimiento": "2023-10-01"
+      },
+      {
+        "nombre_documento": "Política de calidad",
+        "status": "vencido",
+        "fecha_creación": "2021-05-20",
+        "fecha_vencimiento": "2022-05-20"
+      },
+      {
+        "nombre_documento": "Informe financiero",
+        "status": "activo",
+        "fecha_creación": "2023-01-15",
+        "fecha_vencimiento": "2024-01-15"
+      },
+      {
+        "nombre_documento": "Evaluación de proveedores",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-03-30",
+        "fecha_vencimiento": "2024-03-30"
+      },
+      {
+        "nombre_documento": "Documentación legal",
+        "status": "vencido",
+        "fecha_creación": "2021-05-20",
+        "fecha_vencimiento": "2022-05-20"
+      },
+      {
+        "nombre_documento": "Estrategia de marketing",
+        "status": "activo",
+        "fecha_creación": "2023-02-25",
+        "fecha_vencimiento": "2024-02-25"
+      },
+      {
+        "nombre_documento": "Informe de sostenibilidad",
+        "status": "activo",
+        "fecha_creación": "2023-07-01",
+        "fecha_vencimiento": "2024-07-01"
+      },
+      {
+        "nombre_documento": "Auditoría interna",
+        "status": "vencido",
+        "fecha_creación": "2021-06-10",
+        "fecha_vencimiento": "2022-06-10"
+      },
+      {
+        "nombre_documento": "Contratos de socios",
+        "status": "activo",
+        "fecha_creación": "2023-03-15",
+        "fecha_vencimiento": "2024-03-15"
+      },
+      {
+        "nombre_documento": "Acuerdo de asociación",
+        "status": "vencido",
+        "fecha_creación": "2021-12-01",
+        "fecha_vencimiento": "2022-12-01"
+      },
+      {
+        "nombre_documento": "Licencia de operación",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-01-10",
+        "fecha_vencimiento": "2024-01-10"
+      },
+      {
+        "nombre_documento": "Certificado de calidad",
+        "status": "activo",
+        "fecha_creación": "2023-08-01",
+        "fecha_vencimiento": "2024-08-01"
+      },
+      {
+        "nombre_documento": "Plan de acción",
+        "status": "vencido",
+        "fecha_creación": "2021-04-01",
+        "fecha_vencimiento": "2022-04-01"
+      },
+      {
+        "nombre_documento": "Certificado de inscripción",
+        "status": "activo",
+        "fecha_creación": "2023-09-15",
+        "fecha_vencimiento": "2024-09-15"
+      }
+    ]
+  },
+  {
+    "nombre_empresa": "Empresa B",
+    "documentos": [
+      {
+        "nombre_documento": "Contrato",
+        "status": "vencido",
+        "fecha_creación": "2021-01-15",
+        "fecha_vencimiento": "2022-01-15"
+      },
+      {
+        "nombre_documento": "Permiso",
+        "status": "activo",
+        "fecha_creación": "2023-05-20",
+        "fecha_vencimiento": "2024-05-20"
+      },
+      {
+        "nombre_documento": "Plan de seguridad",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-01-01",
+        "fecha_vencimiento": "2024-01-01"
+      },
+      {
+        "nombre_documento": "Informe de auditoría",
+        "status": "activo",
+        "fecha_creación": "2023-06-01",
+        "fecha_vencimiento": "2024-06-01"
+      },
+      {
+        "nombre_documento": "Documentación técnica",
+        "status": "vencido",
+        "fecha_creación": "2021-07-15",
+        "fecha_vencimiento": "2022-07-15"
+      },
+      {
+        "nombre_documento": "Evaluación de impacto",
+        "status": "activo",
+        "fecha_creación": "2023-02-10",
+        "fecha_vencimiento": "2024-02-10"
+      },
+      {
+        "nombre_documento": "Acuerdo de confidencialidad",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-03-20",
+        "fecha_vencimiento": "2024-03-20"
+      },
+      {
+        "nombre_documento": "Permiso de funcionamiento",
+        "status": "vencido",
+        "fecha_creación": "2021-04-05",
+        "fecha_vencimiento": "2022-04-05"
+      },
+      {
+        "nombre_documento": "Auditoría externa",
+        "status": "activo",
+        "fecha_creación": "2023-07-15",
+        "fecha_vencimiento": "2024-07-15"
+      },
+      {
+        "nombre_documento": "Contratos de clientes",
+        "status": "activo",
+        "fecha_creación": "2023-08-15",
+        "fecha_vencimiento": "2024-08-15"
+      },
+      {
+        "nombre_documento": "Informe de progreso",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-04-01",
+        "fecha_vencimiento": "2024-04-01"
+      },
+      {
+        "nombre_documento": "Plan de crecimiento",
+        "status": "vencido",
+        "fecha_creación": "2021-09-10",
+        "fecha_vencimiento": "2022-09-10"
+      },
+      {
+        "nombre_documento": "Estrategia de ventas",
+        "status": "activo",
+        "fecha_creación": "2023-05-01",
+        "fecha_vencimiento": "2024-05-01"
+      },
+      {
+        "nombre_documento": "Certificado de calidad",
+        "status": "activo",
+        "fecha_creación": "2023-03-15",
+        "fecha_vencimiento": "2024-03-15"
+      },
+      {
+        "nombre_documento": "Documentación contable",
+        "status": "vencido",
+        "fecha_creación": "2021-11-30",
+        "fecha_vencimiento": "2022-11-30"
+      }
+    ]
+  },
+  {
+    "nombre_empresa": "Empresa C",
+    "documentos": [
+      {
+        "nombre_documento": "Acuerdo",
+        "status": "activo",
+        "fecha_creación": "2023-03-10",
+        "fecha_vencimiento": "2024-03-10"
+      },
+      {
+        "nombre_documento": "Certificado",
+        "status": "vencido",
+        "fecha_creación": "2021-07-01",
+        "fecha_vencimiento": "2022-07-01"
+      },
+      {
+        "nombre_documento": "Informe anual",
+        "status": "activo",
+        "fecha_creación": "2023-08-20",
+        "fecha_vencimiento": "2024-08-20"
+      },
+      {
+        "nombre_documento": "Licencia de funcionamiento",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-02-20",
+        "fecha_vencimiento": "2024-02-20"
+      },
+      {
+        "nombre_documento": "Política de seguridad",
+        "status": "vencido",
+        "fecha_creación": "2021-10-05",
+        "fecha_vencimiento": "2022-10-05"
+      },
+      {
+        "nombre_documento": "Auditoría interna",
+        "status": "activo",
+        "fecha_creación": "2023-07-30",
+        "fecha_vencimiento": "2024-07-30"
+      },
+      {
+        "nombre_documento": "Informe de cumplimiento",
+        "status": "activo",
+        "fecha_creación": "2023-04-10",
+        "fecha_vencimiento": "2024-04-10"
+      },
+      {
+        "nombre_documento": "Certificado de origen",
+        "status": "vencido",
+        "fecha_creación": "2021-12-15",
+        "fecha_vencimiento": "2022-12-15"
+      },
+      {
+        "nombre_documento": "Plan estratégico",
+        "status": "activo",
+        "fecha_creación": "2023-06-25",
+        "fecha_vencimiento": "2024-06-25"
+      },
+      {
+        "nombre_documento": "Documentación financiera",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-05-05",
+        "fecha_vencimiento": "2024-05-05"
+      },
+      {
+        "nombre_documento": "Estrategia de innovación",
+        "status": "vencido",
+        "fecha_creación": "2021-08-10",
+        "fecha_vencimiento": "2022-08-10"
+      },
+      {
+        "nombre_documento": "Contratos laborales",
+        "status": "activo",
+        "fecha_creación": "2023-09-05",
+        "fecha_vencimiento": "2024-09-05"
+      },
+      {
+        "nombre_documento": "Plan de auditoría",
+        "status": "activo",
+        "fecha_creación": "2023-01-25",
+        "fecha_vencimiento": "2024-01-25"
+      },
+      {
+        "nombre_documento": "Licencia ambiental",
+        "status": "vencido",
+        "fecha_creación": "2021-03-20",
+        "fecha_vencimiento": "2022-03-20"
+      },
+      {
+        "nombre_documento": "Evaluación de desempeño",
+        "status": "activo",
+        "fecha_creación": "2023-02-15",
+        "fecha_vencimiento": "2024-02-15"
+      },
+      {
+        "nombre_documento": "Certificado de cumplimiento",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-08-30",
+        "fecha_vencimiento": "2024-08-30"
+      }
+    ]
+  },
+  {
+    "nombre_empresa": "Empresa D",
+    "documentos": [
+      {
+        "nombre_documento": "Contrato",
+        "status": "activo",
+        "fecha_creación": "2023-06-01",
+        "fecha_vencimiento": "2024-06-01"
+      },
+      {
+        "nombre_documento": "Licencia",
+        "status": "próximo a vencer",
+        "fecha_creación": "2022-11-01",
+        "fecha_vencimiento": "2023-11-01"
+      },
+      {
+        "nombre_documento": "Certificado",
+        "status": "activo",
+        "fecha_creación": "2023-04-01",
+        "fecha_vencimiento": "2024-04-01"
+      },
+      {
+        "nombre_documento": "Evaluación de riesgos",
+        "status": "vencido",
+        "fecha_creación": "2021-11-20",
+        "fecha_vencimiento": "2022-11-20"
+      },
+      {
+        "nombre_documento": "Informe de gestión",
+        "status": "activo",
+        "fecha_creación": "2023-05-10",
+        "fecha_vencimiento": "2024-05-10"
+      },
+      {
+        "nombre_documento": "Plan de negocio",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-02-15",
+        "fecha_vencimiento": "2024-02-15"
+      },
+      {
+        "nombre_documento": "Auditoría de cumplimiento",
+        "status": "vencido",
+        "fecha_creación": "2021-09-25",
+        "fecha_vencimiento": "2022-09-25"
+      },
+      {
+        "nombre_documento": "Política de sostenibilidad",
+        "status": "activo",
+        "fecha_creación": "2023-01-05",
+        "fecha_vencimiento": "2024-01-05"
+      },
+      {
+        "nombre_documento": "Documentación técnica",
+        "status": "activo",
+        "fecha_creación": "2023-03-20",
+        "fecha_vencimiento": "2024-03-20"
+      },
+      {
+        "nombre_documento": "Contratos de trabajo",
+        "status": "próximo a vencer",
+        "fecha_creación": "2023-08-10",
+        "fecha_vencimiento": "2024-08-10"
+      },
+      {
+        "nombre_documento": "Acuerdo de confidencialidad",
+        "status": "vencido",
+        "fecha_creación": "2021-02-05",
+        "fecha_vencimiento": "2022-02-05"
+      },
+      {
+        "nombre_documento": "Certificado de calidad",
+        "status": "activo",
+        "fecha_creación": "2023-06-15",
+        "fecha_vencimiento": "2024-06-15"
+      },
+      {
+        "nombre_documento": "Plan de capacitación",
+        "status": "activo",
+        "fecha_creación": "2023-07-01",
+        "fecha_vencimiento": "2024-07-01"
+      },
+      {
+        "nombre_documento": "Informe de auditoría",
+        "status": "vencido",
+        "fecha_creación": "2021-04-30",
+        "fecha_vencimiento": "2022-04-30"
+      },
+      {
+        "nombre_documento": "Política de calidad",
+        "status": "activo",
+        "fecha_creación": "2023-09-01",
+        "fecha_vencimiento": "2024-09-01"
+      }
+    ]
+  }
+]

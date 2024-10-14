@@ -1,0 +1,179 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    background-color: #eef2f3; /* Color de fondo suave */
+    color: #333;
+}
+/* Estilos para la barra lateral */
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #1c7060, #108072); /* Fondo degradado verde */
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    height: 100%; /* Ajusta la altura al 100% de la pantalla */
+    position: fixed; /* Fija la barra lateral */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.sidebar h2 {
+    color: #ffffff;
+    font-size: 1.8em;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra en el texto */
+    text-align: center; /* Centrar el título */
+}
+.sidebar img {
+    width: 80%; /* Ajusta el tamaño del logo */
+    margin-bottom: 20px; /* Añade un margen inferior */
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5)); /* Sombra al logo */
+}
+.sidebar a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s, transform 0.2s; /* Animación al pasar el mouse */
+}
+.sidebar a:hover {
+    background-color: #1e7e7e; /* Un poco más oscuro al pasar el mouse */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+/* Estilos para el contenido principal */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 250px; /* Deja espacio para la barra lateral */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; /* Permite el desplazamiento si hay mucho contenido */
+}
+h1 {
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    color: #4a4a4a;
+    text-align: center; /* Centrar el título principal */
+}
+#charts {
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.chart-container {
+    width: 300px; /* Ancho fijo para los gráficos */
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s; /* Efecto de aumento en gráficos */
+    cursor: pointer; /* Cambiar el cursor para indicar clickeable */
+}
+.chart-container:hover {
+    transform: scale(1.02); /* Efecto de aumento al pasar el mouse */
+}
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+.chart-title {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #4a4a4a;
+}
+/* Estilo para la gráfica general */
+#total {
+    width: 80%; /* Ancho de la gráfica general */
+    max-width: 800px; /* Ancho máximo */
+    margin-bottom: 30px; /* Espacio debajo de la gráfica */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px; /* Padding alrededor de la gráfica */
+    background-color: #fff; /* Fondo blanco para la gráfica */
+}
+/* Estilos para la tabla */
+.table-container {
+    width: 80%;
+    margin-top: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px; /* Padding aumentado para dar más espacio */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    opacity: 0.9; /* Más discreto */
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em; /* Tamaño de fuente más pequeño */
+}
+th, td {
+    padding: 10px; /* Padding aumentado para mayor espacio */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: #196c55; /* Color de encabezado */
+    color: white;
+}
+.highlight {
+    font-weight: bold;
+    color: red; /* Color para resaltar la empresa con más documentos vencidos */
+}
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1; /* En la parte superior */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Altura completa */
+    overflow: auto; /* Habilita el desplazamiento si es necesario */
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro */
+    padding-top: 60px; /* Espacio superior */
+}
+.modal-content {
+    background-color: #fefefe; /* Fondo blanco */
+    margin: 5% auto; /* Margen superior e inferior */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del modal */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+.close {
+    color: #aaa; /* Color del botón de cerrar */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black; /* Color al pasar el mouse */
+    text-decoration: none;
+    cursor: pointer;
+}
+/* Estilos para la tabla en el modal */
+.document-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Espacio arriba de la tabla */
+}
+.document-table th,
+.document-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.document-table th {
+    background-color: #196c55; /* Color de encabezado */
+    color: white;
+}
