@@ -13,7 +13,7 @@
         rel="stylesheet">
 </head>
 
-<body>  
+<body>
 
     <img src="../../assets/images/imss_logo.png" id="imgIMSS">
 
@@ -22,24 +22,25 @@
 
         <div class="container">
             <img src="../../assets/images/siguard.svg" class="siguardLogo">
-            <form action="/my-handling-form-page" method="post" class="formulario">
+            <form id="formLogin" class="formulario">
                 <ul>
                     <li>
-                        <label for="correo">Usuario</label>
-                        <input type="text" id="name" name="user_name" placeholder="Correo electrónico" />
+                        <label for="username">Usuario</label>
+                        <input type="text" id="usernameForm" placeholder="Correo electrónico" />
                     </li>
                     <li>
                         <label for="password">Contraseña</label>
-                        <input type="password" id="mail" name="user_mail" placeholder="Contraseña" />
+                        <input type="password" id="passwordForm" placeholder="Contraseña" />
                     </li>
 
                 </ul>
+                <button type="submit">Enviar Servidor</button>
             </form>
 
             <button class="unbtn" onclick="location.href='adminMenuPrincipal.html'">Entrar</button>
         </div>
     </div>
-
+    <script src="../js/login.js"></script>
 </body>
 
 </html>
