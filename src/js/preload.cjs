@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer, ipcMain } = require("electron");
 const axios = require("axios");
 
-const url = "http://212.1.213.32:8080";
+//const url = "http://212.1.213.32:8080";
 //const url = "http://localhost:8080";
 
 //Función Erick
@@ -49,7 +49,7 @@ contextBridge.exposeInMainWorld("authentication", {
       }
       //Realiza peticion para obtener el Rol
       const user = { username: username, password: password };
-      const response = await axios.post(`${url}/auth/login`, user);
+      const response = await apiClient.post(`/auth/login`, user);
 
       ipcRenderer.send("guardaToken", response.data.jwtToken);
 
@@ -75,7 +75,7 @@ contextBridge.exposeInMainWorld("guarderia", {
   getAll: async () => {
     try {
       // Realizar la petición GET con Axios
-      const response = await axios.get(`${url}/guarderia/all`);
+      const response = await apiClient.get(`/guarderia/all`);
       // Manejar la respuesta
       return response.data; // Devuelve los datos al renderizador
     } catch (error) {
@@ -88,7 +88,7 @@ contextBridge.exposeInMainWorld("guarderia", {
   getById: async (id) => {
     try {
       // Realizar la petición GET con Axios
-      const response = await axios.get(`${url}/guarderia/${id}`);
+      const response = await apiClient.get(`/guarderia/${id}`);
       // Manejar la respuesta
       return response.data; // Devuelve los datos al renderizador
     } catch (error) {
@@ -107,7 +107,7 @@ contextBridge.exposeInMainWorld("guarderia", {
         fechaInicioContrato: fechIn,
         fechaFinContrato: fechFin,
       };
-      const response = await axios.post(`${url}/guarderia/add`, guarderiaJson); // Realizar la petición GET con Axios
+      const response = await apiClient.post(`/guarderia/add`, guarderiaJson); // Realizar la petición GET con Axios
       return response.data; // Devuelve los datos al renderizador
     } catch (error) {
       console.error("Error en la petición POST:", error);
@@ -118,9 +118,7 @@ contextBridge.exposeInMainWorld("guarderia", {
   //Elimina guarderia
   deleteById: async (idGuarderia) => {
     try {
-      const response = await axios.post(
-        `${url}/guarderia/delete/${idGuarderia}`
-      );
+      const response = await apiClient.post(`/guarderia/delete/${idGuarderia}`);
       return response.data;
     } catch (error) {
       return error.message;
@@ -135,8 +133,8 @@ contextBridge.exposeInMainWorld("guarderia", {
       nuevasFechas: nuevasFechas,
     };
     try {
-      const response = await axios.patch(
-        `${url}/guarderia/actGuardContrato`,
+      const response = await apiClient.patch(
+        `/guarderia/actGuardContrato`,
         actualiza
       );
       return response.data;
@@ -154,7 +152,7 @@ contextBridge.exposeInMainWorld("Usuario", {
   addGerente: async (nombre, email, password) => {
     const usuario = { nombre: nombre, email: email, password: password };
     try {
-      const response = await axios.post(`${url}/usuario/addGerente`, usuario);
+      const response = await apiClient.post(`/usuario/addGerente`, usuario);
       return response.data;
     } catch (error) {
       return { error: error.message };
@@ -164,8 +162,8 @@ contextBridge.exposeInMainWorld("Usuario", {
   //Elimina un Gerente
   deleteGerente: async (idGertente) => {
     try {
-      const reponse = await axios.delete(
-        `${url}/usuario/deleteGerente/${idGerente}`
+      const reponse = await apiClient.delete(
+        `/usuario/deleteGerente/${idGerente}`
       );
       return response.data;
     } catch (error) {
@@ -176,7 +174,7 @@ contextBridge.exposeInMainWorld("Usuario", {
   //Trae la lista de Gerentes
   listGerentes: () => {
     try {
-      const response = axios.get(`${url}/usuario/listGerentes`);
+      const response = apiClient.get(`/usuario/listGerentes`);
       return response.data;
     } catch (error) {
       return { error: error.message };
