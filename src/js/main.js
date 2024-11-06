@@ -16,6 +16,7 @@ const __dirname = dirname(__filename);
 let mainWindow;
 let loginWindow;
 
+//sdfasdfasdfasdfasdfasdf
 const serverApp = express();
 const port = 3000;
 
@@ -25,9 +26,22 @@ const uri =
   "mongodb+srv://jestgx:xRvHh597z2ouTGbC@siguard.dcen2.mongodb.net/?retryWrites=true&w=majority&appName=Siguard";
 const client = new MongoClient(uri);
 
-serverApp.get("/api/daycares", async (req, res) => {
+async function connectMongoDB() {
   try {
     await client.connect();
+    console.log("Conectado a MongoDB exitosamente");
+  } catch (error) {
+    console.error("Error al conectar a MongoDB:", error);
+    process.exit(1); // Finaliza el proceso si no se puede conectar
+  }
+}
+
+connectMongoDB(); // Conexión persistente al iniciar el servidor
+
+// Rutas de la API
+
+serverApp.get("/api/daycares", async (req, res) => {
+  try {
     const database = client.db("siguard");
     const collection = database.collection("guarderias");
     const daycares = await collection.find({}).toArray();
@@ -35,32 +49,26 @@ serverApp.get("/api/daycares", async (req, res) => {
   } catch (error) {
     console.error("Error al obtener las guarderías:", error);
     res.status(500).json({ error: "Error al obtener las guarderías" });
-  } finally {
-    await client.close();
   }
 });
 
 serverApp.put("/api/daycares/:id", async (req, res) => {
   const { id } = req.params;
   const { razon_social, fecha_inicio, fecha_termino, num_guarderia } = req.body;
-
   try {
-    await client.connect();
     const database = client.db("siguard");
     const collection = database.collection("guarderias");
-
     const result = await collection.updateOne(
       { _id: id },
       {
         $set: {
-          razon_social: razon_social,
+          razon_social,
           fecha_inicio: new Date(fecha_inicio),
           fecha_termino: new Date(fecha_termino),
-          num_guarderia: num_guarderia, // Agregar el campo num_guarderia
+          num_guarderia,
         },
       }
     );
-
     if (result.modifiedCount === 1) {
       res.json({
         success: true,
@@ -76,21 +84,15 @@ serverApp.put("/api/daycares/:id", async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Error al actualizar la guardería." });
-  } finally {
-    await client.close();
   }
 });
 
 serverApp.delete("/api/daycares/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
-    await client.connect();
     const database = client.db("siguard");
     const collection = database.collection("guarderias");
-
     const result = await collection.deleteOne({ _id: id });
-
     if (result.deletedCount === 1) {
       res.json({
         success: true,
@@ -106,10 +108,9 @@ serverApp.delete("/api/daycares/:id", async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Error al eliminar la guardería." });
-  } finally {
-    await client.close();
   }
 });
+
 serverApp.post("/api/daycares", async (req, res) => {
   const {
     _id,
@@ -119,21 +120,17 @@ serverApp.post("/api/daycares", async (req, res) => {
     fecha_termino,
     num_guarderia,
   } = req.body;
-
   try {
-    await client.connect();
     const database = client.db("siguard");
     const collection = database.collection("guarderias");
-
     const result = await collection.insertOne({
-      _id: _id,
-      razon_social: razon_social,
-      id_usuario_gerente: id_usuario_gerente,
-      fecha_inicio: new Date(fecha_inicio), // Convertir a Date
-      fecha_termino: new Date(fecha_termino), // Convertir a Date
-      num_guarderia: num_guarderia, // Agregar el campo num_guarderia
+      _id,
+      razon_social,
+      id_usuario_gerente,
+      fecha_inicio: new Date(fecha_inicio),
+      fecha_termino: new Date(fecha_termino),
+      num_guarderia,
     });
-
     res.json({
       success: true,
       message: "Guardería agregada correctamente.",
@@ -144,48 +141,26 @@ serverApp.post("/api/daycares", async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Error al agregar la guardería." });
-  } finally {
-    await client.close();
   }
 });
 
-serverApp.post('/api/daycares', async (req, res) => {
-    const { _id, razon_social, id_usuario_gerente, fecha_inicio, fecha_termino, num_guarderia } = req.body;
-    try {
-        const database = client.db("siguard");
-        const collection = database.collection("guarderias");
-        const result = await collection.insertOne({
-            _id,
-            razon_social,
-            id_usuario_gerente,
-            fecha_inicio: new Date(fecha_inicio),
-            fecha_termino: new Date(fecha_termino),
-            num_guarderia
-        });
-        res.json({ success: true, message: 'Guardería agregada correctamente.', id: result.insertedId });
-    } catch (error) {
-        console.error('Error al agregar la guardería:', error);
-        res.status(500).json({ success: false, message: 'Error al agregar la guardería.' });
-    }
-});
-
-serverApp.get('/api/documents', async (req, res) => {
-    try {
-        const database = client.db("siguard");
-        const collection = database.collection("documentos");
-        const documents = await collection.find({}).toArray();
-        res.json(documents);
-    } catch (error) {
-        console.error('Error al obtener los documentos:', error);
-        res.status(500).json({ error: 'Error al obtener los documentos' });
-    }
+serverApp.get("/api/documents", async (req, res) => {
+  try {
+    const database = client.db("siguard");
+    const collection = database.collection("documentos");
+    const documents = await collection.find({}).toArray();
+    res.json(documents);
+  } catch (error) {
+    console.error("Error al obtener los documentos:", error);
+    res.status(500).json({ error: "Error al obtener los documentos" });
+  }
 });
 
 // Configuración del servidor de Express
 serverApp.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
-
+//sdfasdfasdfasdfasdfasdf
 async function createWindow() {
   loginWindow = new BrowserWindow({
     autoHideMenuBar: false,
@@ -252,7 +227,7 @@ function handleUserRole() {
         loginWindow.loadFile("src/views/adminMenuPrincipal.html");
         break;
       case "GERENTE":
-        loginWindow.loadFile("src/views/reportes.html");
+        loginWindow.loadFile("src/views/usuarioMenuPrincipalVentana.html");
         break;
     }
   } catch (error) {

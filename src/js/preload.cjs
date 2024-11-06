@@ -4,16 +4,6 @@ const axios = require("axios");
 //const url = "http://212.1.213.32:8080";
 //const url = "http://localhost:8080";
 
-//Función Erick
-contextBridge.exposeInMainWorld("ipcRenderer", {
-  send: (channel, title, body) => {
-    const validChannels = ["send-notification"];
-    if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, { title, body });
-    }
-  },
-});
-
 //Configuracion de axios
 // Crea una instancia de Axios
 const apiClient = axios.create({
@@ -230,21 +220,17 @@ contextBridge.exposeInMainWorld("contrato", {
   },
 });*/
 
-
-
-const { contextBridge, ipcRenderer } = require('electron');
-
-contextBridge.exposeInMainWorld('ipcRenderer', {
-    send: (channel, data) => {
-        const validChannels = ['send-notification', 'login'];
-        if (validChannels.includes(channel)) {
-            ipcRenderer.send(channel, data);
-        }
-    },
-    on: (channel, callback) => {
-        const validChannels = ['login-failed'];
-        if (validChannels.includes(channel)) {
-            ipcRenderer.on(channel, (event, ...args) => callback(...args));
-        }
+contextBridge.exposeInMainWorld("ipcRenderer", {
+  send: (channel, data) => {
+    const validChannels = ["send-notification", "login"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
     }
+  },
+  on: (channel, callback) => {
+    const validChannels = ["login-failed"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.on(channel, (event, ...args) => callback(...args));
+    }
+  },
 });
