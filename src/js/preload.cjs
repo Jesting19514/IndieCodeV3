@@ -205,10 +205,10 @@ contextBridge.exposeInMainWorld("fechas", {
     // Convertir la cadena en formato año/mes/día a un objeto Date
     const fecha = parse(fechaBD, "yyyy-MM-dd", new Date());
     // Formatear a día/mes/año
-    return format(fecha, "dd-MM-yyyy");
+    return format(fecha, "dd/MM/yyyy");
   },
   aDB: (fechaNormal) => {
-    const fecha = parse(fechaNormal, "dd-MM-yyyy", new Date());
+    const fecha = parse(fechaNormal, "dd/MM/yyyy", new Date());
     return format(fecha, "yyyy-MM-dd");
   },
 });
@@ -248,4 +248,11 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       ipcRenderer.on(channel, (event, ...args) => callback(...args));
     }
   },
+});
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+contextBridge.exposeInMainWorld("navegation", {
+  navigate: (page, params) => ipcRenderer.invoke("navigate-to", page, params),
+  onNavigateParams: (callback) =>
+    ipcRenderer.on("navigate-params", (event, params) => callback(params)),
 });

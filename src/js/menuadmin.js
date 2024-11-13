@@ -138,7 +138,16 @@ async function loadDaycares() {
       const daycareButton = document.createElement("button");
       daycareButton.classList.add("daycare-item");
       daycareButton.textContent = daycare.nombreGuarderia;
-      daycareButton.onclick = () => (location.href = "adminguarCon.html");
+
+      daycareButton.onclick = () => {
+        const params = {
+          idGuarderia: daycare.id,
+          nombreGuarderia: daycare.nombreGuarderia,
+          fechaInicioContrato: daycare.fechaInicioContrato,
+          fechaFinContrato: daycare.fechaFinContrato,
+        };
+        window.navegation.navigate("adminguarCon.html", params);
+      };
 
       // Crear el contenedor para el número de guardería
       const numGuarderiaContainer = document.createElement("div");

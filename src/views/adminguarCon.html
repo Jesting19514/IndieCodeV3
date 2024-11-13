@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Admin Contratos</title>
     <link rel="stylesheet" href="../css/adguarcon.css">
 </head>
+
 <body>
     <div class="sidebar">
         <h2>ADMIN</h2>
-        
+
         <img src="../../assets/images/imss_logo.png" class="logoimss">
     </div>
     <div class="content">
-        <h1>Guardería n</h1>
-        <p class="contract-dates">Contrato: De 03/09/2008 a 15/6/2029</p>
+        <h1 id="tituloGuarderia">Guardería n</h1>
+        <p class="contract-dates" id="fechasContrato">Contrato: De --/--/---- a --/--/----</p>
         <div id="daycare-list"></div>
     </div>
 
@@ -32,11 +34,11 @@
             <button onclick="closeModal()">Cancelar</button>
         </div>
     </div>
-    
-    
+
+
     <script src="../js/adguarcont.js"></script>
     <div class="button-container"></div>
-        <button class="back-button" onclick="location.href='adminMenuPrincipal.html'">Regresar</button>
+    <button class="back-button" onclick="location.href='adminMenuPrincipal.html'">Regresar</button>
 </body>
 
 </html>

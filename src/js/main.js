@@ -173,9 +173,8 @@ async function createWindow() {
       enableRemoteModule: false,
     },
   });
-  await logicaInicio();
-  //loginWindow.loadFile("src/views/login.html");
-  //mainWindow.loadFile("src/views/adminMenuPrincipal.html");
+  //await logicaInicio();
+  loginWindow.loadFile("src/views/login.html");
 
   loginWindow.on("closed", function () {
     mainWindow = null;
@@ -217,9 +216,10 @@ ipcMain.on("guardaToken", async (event, val) => {
 ipcMain.on("obtenToken", async (event, val) => {
   event.returnValue = jwtDecode(store.get(val));
 });
-function handleUserRole() {
+async function handleUserRole() {
   try {
-    const decodedToken = jwtDecode(store.get("jwtToken"));
+    const token = store.get("jwtToken");
+    const decodedToken = jwtDecode(token);
     const userRole = decodedToken.authorities;
     switch (userRole) {
       case "ADMINISTRADOR":
@@ -228,6 +228,7 @@ function handleUserRole() {
         break;
       case "GERENTE":
         loginWindow.loadFile("src/views/usuarioMenuPrincipalVentana.html");
+
         break;
     }
   } catch (error) {
@@ -241,16 +242,16 @@ const logicaInicio = async () => {
     const tokenDto = { jwtToken: token };
     try {
       await axios.post("http://212.1.213.32:8080/auth/tokenStatus", tokenDto);
-      handleUserRole();
+      await handleUserRole();
     } catch (error) {
       loginWindow.loadFile("src/views/login.html");
     }
   } else loginWindow.loadFile("src/views/login.html");
 };
 
-ipcMain.handle("check-role", (event) => {
+ipcMain.handle("check-role", async (event) => {
   try {
-    handleUserRole();
+    await handleUserRole();
   } catch (error) {
     console.log(error);
   }
@@ -269,3 +270,20 @@ app.on("activate", function () {
     createWindow();
   }
 });
+//
+ipcMain.handle("navigate-to", (event, page, params) =>
+  navigateTo(page, params)
+);
+
+// Función de navegación
+function navigateTo(page, params) {
+  //const pagePath = path.join(__dirname, `${page}.html`);
+  loginWindow.loadFile(`src/views/${page}`);
+
+  // Enviar los parámetros a la nueva página cuando termine de cargar
+  loginWindow.webContents.once("did-finish-load", () => {
+    if (params) {
+      loginWindow.webContents.send("navigate-params", params);
+    }
+  });
+}

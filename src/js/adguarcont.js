@@ -62,33 +62,29 @@ async function loadDocuments() {
     console.error("Error al cargar los documentos:", error);
   }
 }
-function validateDates(startDate, endDate) {
-  const today = new Date().setHours(0, 0, 0, 0); // Obtener la fecha actual, ignorando la hora
-  const start = new Date(startDate).setHours(0, 0, 0, 0);
-  const end = new Date(endDate).setHours(0, 0, 0, 0);
 
-  if (start < today) {
-    alert("La fecha de inicio no puede ser en el pasado.");
-    return false;
-  }
-  if (start >= end) {
-    alert("La fecha de inicio debe ser anterior a la fecha de término.");
-    return false;
-  }
-  if (start == end) {
-    alert("La fecha final no puede ser la misma que la fecha de inicio.");
-    return false;
-  }
-  return true;
-}
-document.addEventListener("DOMContentLoaded", () => {
-  fetchDocuments(); // Llamada para obtener los documentos al cargar la página
+window.navegation.onNavigateParams((params) => {
+  const {
+    idGuarderia,
+    nombreGuarderia,
+    fechaInicioContrato,
+    fechaFinContrato,
+  } = params;
+  document.getElementById("tituloGuarderia").textContent = nombreGuarderia; // Setear el titulo
+  document.getElementById(
+    "fechasContrato"
+  ).textContent = `Contrato: De ${window.fechas.aNormal(
+    fechaInicioContrato
+  )} a ${window.fechas.aNormal(fechaFinContrato)}`; //Setear las fechas
+  fetchDocuments(idGuarderia);
 });
 
-async function fetchDocuments() {
+async function fetchDocuments(idGuarderia) {
+  let identificador;
   try {
+    console.log(identificador);
     /* TODO */
-    const documents = await window.guarderia.getById(4); /* TODO */
+    const documents = await window.guarderia.getById(idGuarderia); /* TODO */
 
     //const documents = await response.json();
     console.log(documents.documentos);
