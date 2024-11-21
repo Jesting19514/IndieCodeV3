@@ -304,18 +304,15 @@ async function addDaycare() {
 
         if (result.status === 200) {
           closeModal();
-          loadDaycares();
+          alert("Guarderia Agregada Exitosamente");
+          await loadDaycares();
         } else {
           console.error("Error:", result.message);
         }
       } catch (error) {
-        console.error("Error al agregar la guardería:", error);
-      } finally {
-        setTimeout(() => {
-          messageContainer.remove();
-        }, 1000);
+        alert("Algo salio mal :( \n" + error);
+        closeModal();
       }
-      await loadDaycares(); // Vuelve a cargar las guarderias
     } else {
       alert("Por favor, completa todos los campos antes de confirmar.");
     }
