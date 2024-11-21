@@ -242,8 +242,34 @@ function confirmDelete() {
     errorText.style.display = "block";
   }
 }
+async function loadGerentes() {
+  const selectGerentes = document.getElementById("gerentes-list");
+  try {
+    const listaGerentes = await window.usuario.listGerentes(); //Peticion a la API
+    listaGerentes.forEach((gerente) => {
+      const option = document.createElement("option"); // Crear un <option>
+      option.value = gerente.idGerente; // Establecer el valor como idGerente
+      option.textContent = gerente.nombre; // Establecer el texto como nombre
+      selectGerentes.appendChild(option); // Añadir la opción al <select>
+    });
+  } catch (error) {
+    console.log(error);
+    const option = document.createElement("option");
+    option.textContent = "Verifique su conexion a internet";
+    selectGerentes.appendChild(option); // Añadir la opción al <select>
+  }
+
+  // // Agregar opciones al <select>
+  // listaGerentes.forEach((listaGerentes) => {
+}
 
 async function addDaycare() {
+  await loadGerentes();
+  //  private String idGuarderia;
+  //  private String nombreGuarderia;
+  //  private Long idGerente;
+  //  private LocalDate fechaInicioContrato;
+  //  private LocalDate fechaFinContrato;
   showModal("add");
 
   document.getElementById("modal-confirm").onclick = async () => {

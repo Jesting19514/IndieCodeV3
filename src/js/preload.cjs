@@ -173,9 +173,9 @@ contextBridge.exposeInMainWorld("usuario", {
   },
   //ADMIN
   //Trae la lista de Gerentes
-  listGerentes: () => {
+  listGerentes: async () => {
     try {
-      const response = apiClient.get(`/usuario/listGerentes`);
+      const response = await apiClient.get(`/usuario/listGerentes`);
       return response.data;
     } catch (error) {
       return { error: error.message };
