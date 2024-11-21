@@ -273,15 +273,19 @@ async function addDaycare() {
   showModal("add");
 
   document.getElementById("modal-confirm").onclick = async () => {
+    const newNumGuarderia = document.getElementById("num-guarderia").value;
     const newRazonSocial = document.getElementById("modal-input").value;
+    const idGerente = document.getElementById("gerentes-list").value;
+
     const startDate = document.getElementById("start-date").value;
     const endDate = document.getElementById("end-date").value;
-    const newNumGuarderia = document.getElementById("num-guarderia").value; // Obtener el valor de num_guarderia
-
-    if (newRazonSocial && startDate && endDate && newNumGuarderia) {
-      // Verifica que num_guarderia también esté lleno
-      const randomId = Math.floor(Math.random() * 10000).toString();
-
+    if (
+      newRazonSocial &&
+      startDate &&
+      endDate &&
+      newNumGuarderia &&
+      idGerente
+    ) {
       const messageContainer = document.createElement("div");
       messageContainer.textContent = "Espere un segundo...";
       messageContainer.style.color = "blue";
@@ -290,21 +294,15 @@ async function addDaycare() {
       modalContent.appendChild(messageContainer);
 
       try {
-        const response = await fetch("http://localhost:3000/api/daycares", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            _id: randomId,
-            razon_social: newRazonSocial,
-            id_usuario_gerente: 1,
-            fecha_inicio: startDate,
-            fecha_termino: endDate,
-            num_guarderia: newNumGuarderia, // Agregar el campo num_guarderia al cuerpo de la solicitud
-          }),
-        });
+        const result = await window.guarderia.add(
+          newNumGuarderia,
+          newRazonSocial,
+          idGerente,
+          startDate,
+          endDate
+        );
 
-        const result = await response.json();
-        if (result.success) {
+        if (result.status === 200) {
           closeModal();
           loadDaycares();
         } else {
@@ -317,6 +315,7 @@ async function addDaycare() {
           messageContainer.remove();
         }, 1000);
       }
+      await loadDaycares(); // Vuelve a cargar las guarderias
     } else {
       alert("Por favor, completa todos los campos antes de confirmar.");
     }
