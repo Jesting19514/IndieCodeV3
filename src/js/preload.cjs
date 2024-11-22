@@ -99,17 +99,20 @@ contextBridge.exposeInMainWorld("guarderia", {
         fechaFinContrato: fechFin,
       };
       const response = await apiClient.post(`/guarderia/add`, guarderiaJson); // Realizar la petición GET con Axios
-      return response.data; // Devuelve los datos al renderizador
+      return response; // Devuelve los datos al renderizador
     } catch (error) {
       console.error("Error en la petición POST:", error);
-      return { error: error.message }; // Maneja el error
+      console.log(error);
+      return error.response.data; // Maneja el error
     }
   },
   //ADMIN
   //Elimina guarderia
   deleteById: async (idGuarderia) => {
     try {
-      const response = await apiClient.post(`/guarderia/delete/${idGuarderia}`);
+      const response = await apiClient.delete(
+        `/guarderia/delete/${idGuarderia}`
+      );
       return response.data;
     } catch (error) {
       return error.message;

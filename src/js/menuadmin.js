@@ -211,7 +211,8 @@ function showDeleteConfirmModal() {
   setTimeout(() => confirmInput.focus(), 100);
 }
 
-function confirmDelete() {
+async function confirmDelete() {
+  const deleteModal = document.getElementById("delete-confirm-modal");
   const daycareContainer = currentButton.closest(".daycare-item-container");
   const id = daycareContainer.getAttribute("data-id");
   const confirmInput = document.getElementById("delete-confirm-input");
@@ -220,22 +221,14 @@ function confirmDelete() {
   errorText.style.display = "none";
 
   if (confirmInput.value === "DELETE") {
-    fetch(`http://localhost:3000/api/daycares/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          daycareContainer.remove();
-          closeDeleteConfirmModal();
-        } else {
-          console.error("Error:", result.message);
-        }
-      })
-      .catch((error) =>
-        console.error("Error al eliminar la guardería:", error)
-      );
+    try {
+      await window.guarderia.deleteById(id);
+    } catch (error) {
+      console.log("Error al eliminar: " + error);
+    }
+    closeDeleteConfirmModal();
+    await loadDaycares();
+    alert("Guarderia Eliminada exitosamente");
   } else {
     errorText.textContent =
       "¡Confirmación incorrecta! Escriba DELETE para continuar.";
@@ -244,6 +237,7 @@ function confirmDelete() {
 }
 async function loadGerentes() {
   const selectGerentes = document.getElementById("gerentes-list");
+  selectGerentes.innerHTML = "";
   try {
     const listaGerentes = await window.usuario.listGerentes(); //Peticion a la API
     listaGerentes.forEach((gerente) => {
@@ -278,13 +272,6 @@ async function addDaycare() {
       newNumGuarderia &&
       idGerente
     ) {
-      const messageContainer = document.createElement("div");
-      messageContainer.textContent = "Espere un segundo...";
-      messageContainer.style.color = "blue";
-      messageContainer.style.marginTop = "10px";
-      const modalContent = document.querySelector(".modal-content");
-      modalContent.appendChild(messageContainer);
-
       try {
         const result = await window.guarderia.add(
           newNumGuarderia,
@@ -293,18 +280,16 @@ async function addDaycare() {
           startDate,
           endDate
         );
-
         if (result.status === 200) {
           closeModal();
           alert("Guarderia Agregada Exitosamente");
           await loadDaycares();
         } else {
-          alert("Algo salio mal, vuelva a intentarlo :( \n");
+          alert("Algo salio mal, vuelva a intentarlo :( \n" + result);
           closeModal();
-          console.error("Error:", result.message);
         }
       } catch (error) {
-        alert("Algo salio mal :( \n" + error);
+        alert("Algo salio mal :( lero \n" + error.data);
         closeModal();
       }
     } else {
