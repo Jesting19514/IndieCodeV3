@@ -1,10 +1,17 @@
 let selectedButton = null; // Variable para almacenar el botón seleccionado
 let existingDates = {}; // Objeto para almacenar fechas existentes para todos los documentos
+let guarderiaData = {};
 
 // Abrir el selector de fechas cuando se hace clic en el botón de edición
-function openDatePicker(button) {
+function openDatePicker(button, id) {
   selectedButton = button.previousElementSibling; // Almacenar el botón del documento asociado
-  document.getElementById("date-modal").style.display = "block"; // Mostrar el modal
+
+  // Guardar el ID en el dataset del modal
+  const modal = document.getElementById("date-modal");
+  modal.dataset.currentId = id;
+
+  // Mostrar el modal
+  modal.style.display = "block";
 }
 
 function closeModal() {
@@ -64,6 +71,10 @@ async function loadDocuments() {
 }
 
 window.navegation.onNavigateParams((params) => {
+  cargaVentana(params);
+  guarderiaData = params;
+});
+function cargaVentana(params) {
   const {
     idGuarderia,
     nombreGuarderia,
@@ -77,14 +88,14 @@ window.navegation.onNavigateParams((params) => {
     fechaInicioContrato
   )} a ${window.fechas.aNormal(fechaFinContrato)}`; //Setear las fechas
   fetchDocuments(idGuarderia);
-});
+}
 
 async function fetchDocuments(idGuarderia) {
   let identificador;
   try {
     console.log(identificador);
-    /* TODO */
-    const documents = await window.guarderia.getById(idGuarderia); /* TODO */
+
+    const documents = await window.guarderia.getById(idGuarderia);
 
     //const documents = await response.json();
     console.log(documents.documentos);
@@ -94,11 +105,13 @@ async function fetchDocuments(idGuarderia) {
     documents.documentos.forEach((doc) => {
       const itemContainer = document.createElement("div");
       itemContainer.classList.add("daycare-item-container");
+      // Guardar el identificador en un atributo personalizado
+      itemContainer.dataset.id = doc.id; // Guardar doc.id como atributo data-id
 
       const button = document.createElement("button");
       button.classList.add("daycare-item");
       button.innerHTML = `
-                ${doc.nombre} (Guardería: ${doc.id})<br>
+                ${doc.nombre} (Documento: ${doc.id})<br>
                 <span class="date-text">Fecha de inicio: 
                   ${doc.inicio ? window.fechas.aNormal(doc.inicio) : null}
                 <br>
@@ -111,7 +124,7 @@ async function fetchDocuments(idGuarderia) {
 
       const editButton = createIconButton(
         "../../assets/images/editafecha.png",
-        () => openDatePicker(editButton)
+        () => openDatePicker(editButton, itemContainer.dataset.id)
       );
       itemContainer.appendChild(button);
       itemContainer.appendChild(editButton);
@@ -141,9 +154,15 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("es-ES", options);
 }
 
-function saveDates() {
+async function saveDates() {
+  const modal = document.getElementById("date-modal");
+  const idCurrentDocumento = modal.dataset.currentId; // obtener el Id
+
   const startDateInput = document.getElementById("start-date");
   const endDateInput = document.getElementById("end-date");
+  const fechaInicio = startDateInput.value;
+  const fechaFin = endDateInput.value;
+
   const startDate = new Date(startDateInput.value);
   const endDate = new Date(endDateInput.value);
 
@@ -154,31 +173,18 @@ function saveDates() {
       alert("La fecha final debe ser posterior a la fecha inicial.");
       return; // Detener la ejecución de la función si las fechas no son válidas
     }
-
-    const formattedStartDate = formatDate(startDateInput.value);
-    const formattedEndDate = formatDate(endDateInput.value);
-
-    // Asegurarse de que el botón solo contenga el nombre, sin fechas previas
-    const buttonContent = selectedButton
-      ? selectedButton.textContent.split("Fecha de inicio")[0].trim()
-      : "";
-
-    // Actualizar el contenido del botón con el nombre del documento y las nuevas fechas
-    if (selectedButton) {
-      selectedButton.innerHTML = `${buttonContent}<br><span class="date-text">Fecha de inicio: ${formattedStartDate}<br>Fecha de término: ${formattedEndDate}</span>`;
+    const res = await window.documento.updateDateDoc(
+      idCurrentDocumento,
+      fechaInicio,
+      fechaFin
+    );
+    //TODO
+    if (true) {
     }
 
     closeModal(); // Ocultar el modal después de guardar las fechas
-
-    // Limpiar los campos de fecha
-    startDateInput.value = "";
-    endDateInput.value = "";
-
-    // Verificar fechas y actualizar los colores
-    checkDatesAndUpdate();
-
-    // Llamar a la función de ordenar documentos
-    sortDocuments(); // Organizar los documentos según la nueva prioridad
+    cargaVentana(guarderiaData); //Actualiza la ventana
+    alert("Fecha actualizada Correctamente");
   } else {
     alert("Por favor, selecciona ambas fechas.");
   }

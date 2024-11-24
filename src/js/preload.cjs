@@ -123,7 +123,7 @@ contextBridge.exposeInMainWorld("guarderia", {
   actGuardContra: async (idGuard, nuevoNombreGuard, nuevasFechas) => {
     let actualiza = {
       id: idGuard,
-      nuevoNombre: nuevoNombreGuard,
+      nuevoNombre: nuevoNombreGuard || null,
       nuevasFechas: nuevasFechas,
     };
     try {
@@ -133,7 +133,7 @@ contextBridge.exposeInMainWorld("guarderia", {
       );
       return response.data;
     } catch (error) {
-      return error.message;
+      return error;
     }
   },
   //GERENTE
@@ -190,14 +190,15 @@ contextBridge.exposeInMainWorld("documento", {
   updateDateDoc: async (idDocumento, fechInicio, fechFin) => {
     try {
       let docDto = {
-        idDocumento: idDocumento,
-        fechInicio: fechInicio,
-        fechFin: fechFin,
+        id: idDocumento,
+        inicio: fechInicio,
+        fin: fechFin,
       };
-      const response = await apiClient.patch(`/documento/modifica"`, docDto);
+      const response = await apiClient.patch(`/documento/modifica`, docDto);
       return response.data;
     } catch (error) {
-      return { error: error.message };
+      console.log(error);
+      return error;
     }
   },
 });
