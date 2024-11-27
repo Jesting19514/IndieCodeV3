@@ -1,6 +1,28 @@
 let selectedButton = null; // Variable para almacenar el botón seleccionado
 let existingDates = {}; // Objeto para almacenar fechas existentes para todos los documentos
 let guarderiaData = {};
+//Recibe parametros
+window.navegation.onNavigateParams((params) => {
+  cargaVentana(params);
+  guarderiaData = params;
+});
+//Función par recargar la página con los datos
+function cargaVentana(params) {
+  const {
+    idGuarderia,
+    nombreGuarderia,
+    fechaInicioContrato,
+    fechaFinContrato,
+  } = params;
+  document.getElementById("tituloGuarderia").textContent = nombreGuarderia; // Setear el titulo
+  document.getElementById(
+    "fechasContrato"
+  ).textContent = `Contrato: De ${window.fechas.aNormal(
+    fechaInicioContrato
+  )} a ${window.fechas.aNormal(fechaFinContrato)}`; //Setear las fechas
+
+  fetchDocuments(idGuarderia);
+}
 
 // Abrir el selector de fechas cuando se hace clic en el botón de edición
 function openDatePicker(button, id) {
@@ -18,83 +40,8 @@ function closeModal() {
   document.getElementById("date-modal").style.display = "none"; // Ocultar el modal
 }
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const day = String(date.getUTCDate()).padStart(2, "0"); // getUTCDate para obtener la fecha correcta
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // getUTCMonth para obtener el mes correcto
-  const year = String(date.getUTCFullYear()).slice(-2); // Solo dos dígitos del año
-  return `${day}/${month}/${year}`;
-}
-async function loadDocuments() {
-  const documentList = document.getElementById("daycare-list"); // Cambia el nombre si es necesario
-  documentList.innerHTML = "";
-
-  try {
-    const response = await fetch("http://localhost:3000/api/documentos");
-    const documentos = await response.json();
-
-    documentos.forEach((documento) => {
-      const documentItemContainer = document.createElement("div");
-      documentItemContainer.classList.add("daycare-item-container");
-      documentItemContainer.setAttribute("data-id", documento._id);
-
-      const documentButton = document.createElement("button");
-      documentButton.classList.add("daycare-item"); // Cambia la clase si es necesario
-      documentButton.textContent = documento.nombreDoc; // Usa el campo de nombre adecuado
-      documentButton.onclick = () => (location.href = "adminguarCon.html");
-
-      const editButton = document.createElement("button");
-      editButton.classList.add("edit-button");
-      editButton.onclick = () => editName(editButton);
-      const editIcon = document.createElement("img");
-      editIcon.src = "../../assets/images/editIcon_1.png";
-      editIcon.classList.add("icon");
-      editButton.appendChild(editIcon);
-
-      const deleteButton = document.createElement("button");
-      deleteButton.classList.add("delete-button");
-      deleteButton.onclick = () => deleteDaycare(deleteButton);
-      const deleteIcon = document.createElement("img");
-      deleteIcon.src = "../../assets/images/deleteIcon2.png";
-      deleteIcon.classList.add("icon");
-      deleteButton.appendChild(deleteIcon);
-
-      documentItemContainer.appendChild(documentButton);
-      documentItemContainer.appendChild(editButton);
-      documentItemContainer.appendChild(deleteButton);
-
-      documentList.appendChild(documentItemContainer);
-    });
-  } catch (error) {
-    console.error("Error al cargar los documentos:", error);
-  }
-}
-
-window.navegation.onNavigateParams((params) => {
-  cargaVentana(params);
-  guarderiaData = params;
-});
-function cargaVentana(params) {
-  const {
-    idGuarderia,
-    nombreGuarderia,
-    fechaInicioContrato,
-    fechaFinContrato,
-  } = params;
-  document.getElementById("tituloGuarderia").textContent = nombreGuarderia; // Setear el titulo
-  document.getElementById(
-    "fechasContrato"
-  ).textContent = `Contrato: De ${window.fechas.aNormal(
-    fechaInicioContrato
-  )} a ${window.fechas.aNormal(fechaFinContrato)}`; //Setear las fechas
-  fetchDocuments(idGuarderia);
-}
-
 async function fetchDocuments(idGuarderia) {
-  let identificador;
   try {
-    console.log(identificador);
-
     const documents = await window.guarderia.getById(idGuarderia);
 
     //const documents = await response.json();
@@ -130,8 +77,10 @@ async function fetchDocuments(idGuarderia) {
       itemContainer.appendChild(editButton);
       container.appendChild(itemContainer);
     });
-
-    sortDocuments();
+    // Verificar fechas y actualizar los colores
+    checkDatesAndUpdate();
+    // Llamar a la función de ordenar documentos
+    sortDocuments(); // Organizar los documentos según la nueva prioridad
   } catch (error) {
     console.error("Error al obtener los documentos:", error);
   }
@@ -147,13 +96,7 @@ function createIconButton(iconSrc, onClick) {
   button.addEventListener("click", onClick);
   return button;
 }
-
-// Función para formatear las fechas
-function formatDate(dateString) {
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-  return new Date(dateString).toLocaleDateString("es-ES", options);
-}
-
+//Función llamada desde HTML
 async function saveDates() {
   const modal = document.getElementById("date-modal");
   const idCurrentDocumento = modal.dataset.currentId; // obtener el Id
@@ -181,14 +124,11 @@ async function saveDates() {
     //TODO
 
     closeModal(); // Ocultar el modal después de guardar las fechas
+    // Limpiar los campos de fecha
+    startDateInput.value = "";
+    endDateInput.value = "";
     cargaVentana(guarderiaData); //Actualiza la ventana
-    if (true) {
-      // Verificar fechas y actualizar los colores
-      checkDatesAndUpdate();
 
-      // Llamar a la función de ordenar documentos
-      sortDocuments(); // Organizar los documentos según la nueva prioridad
-    }
     alert("Fecha actualizada Correctamente");
   } else {
     alert("Por favor, selecciona ambas fechas.");
@@ -221,11 +161,12 @@ function convertToDate(dateString) {
 function sortDocuments() {
   const container = document.getElementById("daycare-list");
   const items = Array.from(container.children); // Obtener todos los elementos hijos como un array
-
+  console.log({ Lista: items });
   // Ordenar los elementos basados en el color de sombra
   items.sort((a, b) => {
     const aPriority = getPriority(a.querySelector(".daycare-item"));
     const bPriority = getPriority(b.querySelector(".daycare-item"));
+    console.log({ Prioridad: aPriority });
     return aPriority - bPriority; // Ordenar de menor a mayor prioridad
   });
 
@@ -266,7 +207,6 @@ function checkDatesAndUpdate() {
         0,
         Math.round((endDate - today) / (1000 * 60 * 60 * 24))
       );
-
       updateButtonStyles(button, daysRemaining);
     }
   });

@@ -1,24 +1,39 @@
 let selectedButton = null; // Variable para almacenar el botón seleccionado
-let existingDates = {}; // Objeto para almacenar fechas existentes para todos los documentos
-let guarderiaData = {};
+let existingDates; // Objeto para almacenar fechas existentes para todos los documentos
+let guarderiaData;
+//Elementos de la ventana
+const titleGuarderia = document.getElementById("tituloGuarderia");
+const modal = document.getElementById("date-modal");
+
+//CARGA INICIAL DE VENTANA
+window.navegation.onNavigateParams(async (params) => {
+  guarderiaData = params;
+  await cargaVentana(params);
+});
+async function cargaVentana(params) {
+  const { fechaInicio, fechaTermino } = await window.guarderia.getContrato(
+    params.idGuarderia
+  );
+  titleGuarderia.textContent = params.nombreGuarderia; // Setear el titulo
+
+  document.getElementById(
+    "fechasContrato"
+  ).textContent = `Contrato: De ${window.fechas.aNormal(
+    fechaInicio
+  )} a ${window.fechas.aNormal(fechaTermino)}`; //Setear las fechas
+  fetchDocuments(params.idGuarderia);
+}
 
 // Abrir el selector de fechas cuando se hace clic en el botón de edición
-function openDatePicker(button) {
+function openDatePicker(button, id) {
   selectedButton = button.previousElementSibling; // Almacenar el botón del documento asociado
-  document.getElementById("date-modal").style.display = "block"; // Mostrar el modal
+  modal.dataset.currentId = id; // Guardar el ID en el dataset del modal
+  modal.style.display = "block"; // Mostrar el modal
 }
-
 function closeModal() {
-  document.getElementById("date-modal").style.display = "none"; // Ocultar el modal
+  modal.style.display = "none"; // Ocultar el modal
 }
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const day = String(date.getUTCDate()).padStart(2, "0"); // getUTCDate para obtener la fecha correcta
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // getUTCMonth para obtener el mes correcto
-  const year = String(date.getUTCFullYear()).slice(-2); // Solo dos dígitos del año
-  return `${day}/${month}/${year}`;
-}
 async function loadDocuments() {
   const documentList = document.getElementById("daycare-list"); // Cambia el nombre si es necesario
   documentList.innerHTML = "";
@@ -64,35 +79,19 @@ async function loadDocuments() {
   }
 }
 
-window.navegation.onNavigateParams(async (params) => {
-  await cargaVentana(params);
-});
-async function cargaVentana(params) {
-  const { fechaInicio, fechaTermino } = await window.guarderia.getContrato(
-    params.idGuarderia
-  );
-
-  document.getElementById("tituloGuarderia").textContent =
-    params.nombreGuarderia; // Setear el titulo
-
-  document.getElementById(
-    "fechasContrato"
-  ).textContent = `Contrato: De ${window.fechas.aNormal(
-    fechaInicio
-  )} a ${window.fechas.aNormal(fechaTermino)}`; //Setear las fechas
-  fetchDocuments(params.documentos);
-}
-
-function fetchDocuments(documents) {
-  console.log(documents);
+async function fetchDocuments(idGuarderia) {
   try {
-    console.log(documents);
+    const documents = await window.guarderia.getById(idGuarderia);
+    console.log(documents.documentos);
     const container = document.getElementById("daycare-list");
     container.innerHTML = "";
+    console.log(documents);
 
-    documents.forEach((doc) => {
+    documents.documentos.forEach((doc) => {
       const itemContainer = document.createElement("div");
       itemContainer.classList.add("daycare-item-container");
+      // Guardar el identificador en un atributo personalizado
+      itemContainer.dataset.id = doc.id; // Guardar doc.id como atributo data-id
 
       const button = document.createElement("button");
       button.classList.add("daycare-item");
@@ -110,14 +109,14 @@ function fetchDocuments(documents) {
 
       const editButton = createIconButton(
         "../../assets/images/editafecha.png",
-        () => openDatePicker(editButton)
+        () => openDatePicker(editButton, itemContainer.dataset.id)
       );
       itemContainer.appendChild(button);
       itemContainer.appendChild(editButton);
       container.appendChild(itemContainer);
     });
 
-    sortDocuments();
+    //sortDocuments();
   } catch (error) {
     console.error("Error al obtener los documentos:", error);
   }
@@ -134,18 +133,22 @@ function createIconButton(iconSrc, onClick) {
   return button;
 }
 
-// Función para formatear las fechas
-function formatDate(dateString) {
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-  return new Date(dateString).toLocaleDateString("es-ES", options);
-}
-
-function saveDates() {
-  const startDateInput = document.getElementById("start-date");
+async function saveDates() {
+  const modal = document.getElementById("date-modal");
+  const idCurrentDocumento = modal.dataset.currentId; // obtener el Id
+  //TODO
+  /* const startDateInput = document.getElementById("start-date");
   const endDateInput = document.getElementById("end-date");
   const startDate = new Date(startDateInput.value);
-  const endDate = new Date(endDateInput.value);
+  const endDate = new Date(endDateInput.value); */
+  const startDateInput = document.getElementById("start-date");
+  const endDateInput = document.getElementById("end-date");
+  const fechaInicio = startDateInput.value;
+  const fechaFin = endDateInput.value;
 
+  const startDate = new Date(startDateInput.value);
+  const endDate = new Date(endDateInput.value);
+  alert("Identificador Guarderia: " + idCurrentDocumento);
   // Verificar si ambas fechas están seleccionadas
   if (startDateInput.value && endDateInput.value) {
     // Verificar si la fecha de finalización es anterior o igual a la fecha de inicio
@@ -153,31 +156,22 @@ function saveDates() {
       alert("La fecha final debe ser posterior a la fecha inicial.");
       return; // Detener la ejecución de la función si las fechas no son válidas
     }
-
-    const formattedStartDate = formatDate(startDateInput.value);
-    const formattedEndDate = formatDate(endDateInput.value);
-
-    // Asegurarse de que el botón solo contenga el nombre, sin fechas previas
-    const buttonContent = selectedButton
-      ? selectedButton.textContent.split("Fecha de inicio")[0].trim()
-      : "";
-
-    // Actualizar el contenido del botón con el nombre del documento y las nuevas fechas
-    if (selectedButton) {
-      selectedButton.innerHTML = `${buttonContent}<br><span class="date-text">Fecha de inicio: ${formattedStartDate}<br>Fecha de término: ${formattedEndDate}</span>`;
-    }
-
+    const res = await window.documento.updateDateDoc(
+      idCurrentDocumento,
+      fechaInicio,
+      fechaFin
+    );
+    //TODO
     closeModal(); // Ocultar el modal después de guardar las fechas
-
     // Limpiar los campos de fecha
     startDateInput.value = "";
     endDateInput.value = "";
-
-    // Verificar fechas y actualizar los colores
-    checkDatesAndUpdate();
-
-    // Llamar a la función de ordenar documentos
-    sortDocuments(); // Organizar los documentos según la nueva prioridad
+    try {
+      await cargaVentana(guarderiaData); //Actualiza la ventana
+    } catch (error) {
+      console.log("Un error");
+    }
+    alert("Fecha actualizada Correctamente");
   } else {
     alert("Por favor, selecciona ambas fechas.");
   }
@@ -204,22 +198,6 @@ function convertToDate(dateString) {
       "0"
     )}`
   );
-}
-
-function updateButtonStyles(button, daysRemaining) {
-  if (daysRemaining > 40) {
-    button.style.boxShadow = "0 5px 5px rgba(0, 255, 0, 0.692)"; // Verde
-    button.classList.remove("priority-high", "priority-medium");
-    button.classList.add("priority-low");
-  } else if (daysRemaining <= 40 && daysRemaining > 20) {
-    button.style.boxShadow = "0 5px 5px rgba(255, 145, 0, 0.692)"; // Naranja
-    button.classList.remove("priority-high", "priority-low");
-    button.classList.add("priority-medium");
-  } else {
-    button.style.boxShadow = "0 5px 5px rgba(241, 2, 2, 0.692)"; // Rojo
-    button.classList.remove("priority-medium", "priority-low");
-    button.classList.add("priority-high");
-  }
 }
 
 function sortDocuments() {
@@ -275,4 +253,19 @@ function checkDatesAndUpdate() {
   });
 
   sortDocuments(); // Llamar a sortDocuments para reorganizar los documentos
+}
+function updateButtonStyles(button, daysRemaining) {
+  if (daysRemaining > 40) {
+    button.style.boxShadow = "0 5px 5px rgba(0, 255, 0, 0.692)"; // Verde
+    button.classList.remove("priority-high", "priority-medium");
+    button.classList.add("priority-low");
+  } else if (daysRemaining <= 40 && daysRemaining > 20) {
+    button.style.boxShadow = "0 5px 5px rgba(255, 145, 0, 0.692)"; // Naranja
+    button.classList.remove("priority-high", "priority-low");
+    button.classList.add("priority-medium");
+  } else {
+    button.style.boxShadow = "0 5px 5px rgba(241, 2, 2, 0.692)"; // Rojo
+    button.classList.remove("priority-medium", "priority-low");
+    button.classList.add("priority-high");
+  }
 }
