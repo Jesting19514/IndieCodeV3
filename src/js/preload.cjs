@@ -68,10 +68,24 @@ contextBridge.exposeInMainWorld("guarderia", {
       // Realizar la petición GET con Axios
       const response = await apiClient.get(`/guarderia/all`);
       // Manejar la respuesta
+
       return response.data; // Devuelve los datos al renderizador
     } catch (error) {
       console.error("Error en la petición GET:", error);
       return { error: "Error en la petición" }; // Maneja el error
+    }
+  },
+  //ADMIN && GERENTE
+  //Obtiene el contrato y sus datos
+  getContrato: async (idContrato) => {
+    try {
+      // Realizar la petición GET con Axios
+      const response = await apiClient.get(`/contrato/${idContrato}`);
+      // Manejar la respuesta
+      return response.data; // Devuelve los datos al renderizador
+    } catch (error) {
+      console.error("Error en la petición GET:", error);
+      return error; // Maneja el error
     }
   },
   //ADMIN

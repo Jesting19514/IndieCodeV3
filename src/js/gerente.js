@@ -64,21 +64,18 @@ async function loadDocuments() {
   }
 }
 
-window.navegation.onNavigateParams((params) => {
-  console.log(params);
-  const {
-    idGuarderia,
-    nombreGuarderia,
-    fechaInicioContrato,
-    fechaFinContrato,
-    documentos,
-  } = params;
+window.navegation.onNavigateParams(async (params) => {
+  const { idGuarderia, nombreGuarderia, documentos } = params;
   document.getElementById("tituloGuarderia").textContent = nombreGuarderia; // Setear el titulo
-  // document.getElementById(
-  //   "fechasContrato"
-  // ).textContent = `Contrato: De ${window.fechas.aNormal(
-  //   fechaInicioContrato
-  // )} a ${window.fechas.aNormal(fechaFinContrato)}`; //Setear las fechas
+
+  const res = await window.guarderia.getContrato(idGuarderia);
+  const { fechaInicio, fechaTermino } = res;
+
+  document.getElementById(
+    "fechasContrato"
+  ).textContent = `Contrato: De ${window.fechas.aNormal(
+    fechaInicio
+  )} a ${window.fechas.aNormal(fechaTermino)}`; //Setear las fechas
   fetchDocuments(documentos);
 });
 
@@ -96,7 +93,7 @@ function fetchDocuments(documents) {
       const button = document.createElement("button");
       button.classList.add("daycare-item");
       button.innerHTML = `
-                ${doc.nombre} (Guardería: ${doc.id})<br>
+                ${doc.nombre}\n(Documento: ${doc.id})<br>
                 <span class="date-text">Fecha de inicio:
                   ${doc.inicio ? window.fechas.aNormal(doc.inicio) : null}
                 <br>
