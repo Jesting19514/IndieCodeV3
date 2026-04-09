@@ -13,7 +13,7 @@ body {
   overflow-x: hidden;
   background: linear-gradient(60deg, #0f605c, #09988d);
 }
-#imgIMSS {
+#imgApp {
   position: absolute;
   height: 60%;
   top: 50%;
