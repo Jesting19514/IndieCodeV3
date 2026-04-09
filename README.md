@@ -1,7 +1,7 @@
-# IndieCodeV3
+# Siguard
 
 ## About
-**IndieCodeV3** es una aplicación de escritorio para la administración de guarderías. Está construida con **Electron** para la interfaz de usuario y un **backend en Express** con persistencia en **MongoDB**, todo dentro del mismo proyecto.
+**Siguard** es una aplicación de escritorio para el control de documentos mediante notificaiones y semaforos de prioridad de guarderias subrrogadas. Está construida con **Electron** para la interfaz de usuario y un **backend en Express** con persistencia en **MongoDB**, todo dentro del mismo proyecto.
 
 El flujo principal permite autenticación por roles (administrador y usuario gerente), gestión de guarderías y manejo de documentos asociados.
 
@@ -47,7 +47,7 @@ Funcionalidades destacadas:
 
 ---
 
-## Process
+## Proceso
 Proceso general de funcionamiento:
 
 1. **Arranque de la app:** Electron inicia y levanta el backend local.
@@ -61,7 +61,7 @@ Proceso general de funcionamiento:
 
 ---
 
-## How to run the project
+## Como iniciar el proyecto
 ### 1) Clonar e instalar dependencias
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -102,11 +102,12 @@ npm run dist
 Vista general esperada del flujo:
 
 - Pantalla de login.
+ ![Login](./assets/login.png)
 - Menú principal de administrador.
+ ![Admin](./assets/admin.png)
 - Menú principal de usuario gerente.
+ ![User](./assets/user.png)
 - Gestión de guarderías y documentos.
+ ![Documents](./assets/documents.png)
 
-> Sugerencia: agrega aquí capturas reales de la aplicación, por ejemplo:
->
-> `![Login](./docs/preview-login.png)`  
-> `![Menú admin](./docs/preview-admin.png)`
+
